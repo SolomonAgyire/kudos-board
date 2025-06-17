@@ -4,6 +4,9 @@ import logo from '../assets/images/logo.jpg';
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const filterButtons = ['All', 'Recent', 'Celebration', 'Thank You', 'Inspiration'];
 
   const handleSearch = () => {
 
@@ -11,6 +14,10 @@ const Dashboard = () => {
 
   const handleClear = () => {
     setSearchQuery('');
+  };
+
+  const handleFilterClick = (filter) => {
+    setActiveFilter(filter);
   };
 
   return (
@@ -38,8 +45,30 @@ const Dashboard = () => {
         </div>
       </header>
 
+      <div className="filter-section">
+        <div className="filter-buttons">
+          {filterButtons.map((filter) => (
+            <button
+              key={filter}
+              className={`filter-btn ${activeFilter === filter ? 'active' : ''}`}
+              onClick={() => handleFilterClick(filter)}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <main className="dashboard-main">
-        <p>Dashboard content coming soon...</p>
+        <div className="create-board-container">
+          <button className="create-board-btn">
+            Create a New Board
+          </button>
+        </div>
+
+        <div className="boards-grid">
+          <p>Board cards coming soon...</p>
+        </div>
       </main>
 
       <footer className="dashboard-footer">

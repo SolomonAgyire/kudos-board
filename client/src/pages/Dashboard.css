@@ -11,7 +11,7 @@
 
   .dashboard-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1.5rem 0;
+    padding: 0.1rem 0;
     width: 100%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
@@ -20,11 +20,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0;
   }
 
   .logo {
-    height: 70px;
+    height: 25px;
     width: auto;
     object-fit: contain;
     border-radius: 12px;
@@ -35,14 +36,14 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    max-width: 600px;
+    max-width: 100px;
     margin: 0 auto;
     padding: 0 1rem;
   }
 
   .search-input {
     flex: 1;
-    padding: 0.875rem 1.25rem;
+    padding: 0.65rem 1.0rem;
     border: none;
     border-radius: 25px;
     font-size: 1rem;
@@ -51,6 +52,7 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    max-width: 450px;
   }
 
   .search-input:focus {
@@ -68,11 +70,11 @@
 
   .search-btn,
   .clear-btn {
-    padding: 0.875rem 1.75rem;
+    padding: 0.65rem 1.20rem;
     border: none;
     border-radius: 25px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
@@ -101,14 +103,94 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
+  .filter-section {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    padding: 0.5rem 0;
+    width: 100%;
+    margin: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .filter-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+    flex-shrink: 0;
+  }
+
+  .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .filter-btn.active {
+    background: rgba(255, 255, 255, 0.9);
+    color: #667eea;
+    border-color: white;
+    font-weight: 600;
+  }
+
   .dashboard-main {
     flex: 1;
-    padding: 2rem;
+    padding: 0.2 rem 2rem;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     min-height: 0;
     flex-grow: 1;
+  }
+
+  .create-board-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .create-board-btn {
+    padding: 1rem 0.5rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 350;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+
+  .create-board-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .boards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
   }
 
   .dashboard-footer {
@@ -126,29 +208,38 @@
 
   @media (min-width: 1200px) {
     .dashboard-header {
-      padding: 2rem 0;
+      padding: 1.25rem 0;
     }
 
     .logo {
-      height: 80px;
+      height: 65px;
     }
 
     .search-container {
       max-width: 700px;
     }
+
+    .filter-buttons {
+      gap: 0.75rem;
+    }
+
+    .filter-btn {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.9rem;
+    }
   }
 
   @media (max-width: 768px) {
     .dashboard-header {
-      padding: 1.25rem 0;
+      padding: 0.875rem 0;
     }
 
     .logo-container {
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.875rem;
     }
 
     .logo {
-      height: 55px;
+      height: 45px;
     }
 
     .search-container {
@@ -168,8 +259,31 @@
       font-size: 0.9rem;
     }
 
+    .filter-section {
+      padding: 0.75rem 0;
+    }
+
+    .filter-buttons {
+      gap: 0.4rem;
+      padding: 0 0.75rem;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+    }
+
     .dashboard-main {
       padding: 1.5rem;
+    }
+
+    .create-board-container {
+      margin-top: 0.25rem;
+    }
+
+    .create-board-btn {
+      padding: 0.75rem 0.75rem;
+      font-size: 1rem;
     }
 
     .dashboard-footer {
@@ -209,8 +323,38 @@
       font-weight: 500;
     }
 
+    .filter-section {
+      padding: 0.5rem 0;
+    }
+
+    .filter-buttons {
+      gap: 0.2rem;
+      padding: 0 0.5rem;
+      justify-content: space-between;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.65rem;
+      border-width: 1px;
+      flex: 1;
+      max-width: 19%;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .dashboard-main {
       padding: 1rem;
+    }
+
+    .create-board-container {
+      margin-top: 0.25rem;
+    }
+
+    .create-board-btn {
+      padding: 0.65rem 0.5rem;
+      font-size: 0.9rem;
     }
 
     .dashboard-footer {
@@ -249,9 +393,35 @@
       font-size: 0.75rem;
     }
 
+    .filter-buttons {
+      gap: 0.15rem;
+      padding: 0 0.25rem;
+      justify-content: space-between;
+    }
+
+    .filter-btn {
+      padding: 0.35rem 0.3rem;
+      font-size: 0.6rem;
+      flex: 1;
+      max-width: 19.5%;
+      text-align: center;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .dashboard-main {
       padding: 0.75rem;
       flex: 1;
       min-height: calc(100vh - 180px);
+    }
+
+    .create-board-container {
+      margin-top: 0.25rem;
+    }
+
+    .create-board-btn {
+      padding: 0.5rem 0.4rem;
+      font-size: 0.8rem;
     }
   }

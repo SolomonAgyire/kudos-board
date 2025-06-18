@@ -1,48 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Dashboard.css';
-import logo from '../assets/images/logo.jpg';
+import LogoSection from '../components/LogoSection/LogoSection';
+import SearchBar from '../components/SearchBar/SearchBar';
+import BoardGrid from '../components/BoardGrid/BoardGrid';
+import useBoards from '../hooks/useBoards';
 
 const Dashboard = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+  const {
+    searchQuery,
+    activeFilter,
+    boards,
+    setSearchQuery,
+    handleSearch,
+    handleClearSearch,
+    handleFilterChange,
+    handleViewBoard,
+    handleDeleteBoard
+  } = useBoards();
 
   const filterButtons = ['All', 'Recent', 'Celebration', 'Thank You', 'Inspiration'];
-
-  const handleSearch = () => {
-
-  };
-
-  const handleClear = () => {
-    setSearchQuery('');
-  };
-
-  const handleFilterClick = (filter) => {
-    setActiveFilter(filter);
-  };
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <div className="logo-container">
-          <img src={logo} alt="Kudoboard Logo" className="logo" />
-        </div>
+        <LogoSection />
 
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search boards..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-          <button className="search-btn" onClick={handleSearch}>
-            Search
-          </button>
-          <button className="clear-btn" onClick={handleClear}>
-            Clear
-          </button>
-        </div>
+        <SearchBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onSearch={handleSearch}
+          onClear={handleClearSearch}
+          placeholder="Search boards..."
+        />
       </header>
 
       <div className="filter-section">
@@ -51,7 +40,7 @@ const Dashboard = () => {
             <button
               key={filter}
               className={`filter-btn ${activeFilter === filter ? 'active' : ''}`}
-              onClick={() => handleFilterClick(filter)}
+              onClick={() => handleFilterChange(filter)}
             >
               {filter}
             </button>
@@ -66,9 +55,12 @@ const Dashboard = () => {
           </button>
         </div>
 
-        <div className="boards-grid">
-          <p>Board cards coming soon...</p>
-        </div>
+        <BoardGrid
+          boards={boards}
+          onViewBoard={handleViewBoard}
+          onDeleteBoard={handleDeleteBoard}
+          emptyMessage="No boards match your search. Try a different search term or create a new board!"
+        />
       </main>
 
       <footer className="dashboard-footer">

@@ -59,9 +59,6 @@ export const useBoards = () => {
   }, [boards, searchTerm, selectedCategory]);
 
   const handleSearch = () => {
-    // The filtering happens automatically via useEffect when searchTerm changes
-    // This function can be used for additional search actions if needed
-    // The search is already working through real-time filtering
   };
 
   const handleClearSearch = () => {

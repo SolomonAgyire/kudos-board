@@ -4,7 +4,6 @@ import './BoardGrid.css';
 
 const BoardGrid = ({
   boards,
-  onViewBoard,
   onDeleteBoard,
   emptyMessage = "No boards found. Create your first board!"
 }) => {
@@ -25,7 +24,6 @@ const BoardGrid = ({
         <BoardCard
           key={board.id}
           board={board}
-          onViewBoard={onViewBoard}
           onDeleteBoard={onDeleteBoard}
         />
       ))}
@@ -33,4 +31,4 @@ const BoardGrid = ({
   );
 };
 
-export default BoardGrid
+export default BoardGrid;

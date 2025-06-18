@@ -1,16 +1,26 @@
 {
   "name": "kudosboard",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "A full-stack application for creating and sharing kudos boards",
   "scripts": {
+    "start": "node server/index.js",
+    "server": "cd server && node index.js",
+    "server:dev": "cd server && nodemon index.js",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "kudos",
+    "board",
+    "react",
+    "express",
+    "fullstack"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

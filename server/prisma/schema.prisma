@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Board {
+  id          Int         @id @default(autoincrement())
+  title       String      @db.VarChar(100)
+  description String
+  category    String      @db.VarChar(50)
+  author      String?     @db.VarChar(50)
+  image       String
+  kudosCount  Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updateAt    DateTime    @updatedAt
+  cards       kudosCard[]
+}
+
+model kudosCard {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(80)
+  description String
+  author      String?  @db.VarChar(50)
+  image       String
+  upvotes     Int      @default(0)
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     Int
+}

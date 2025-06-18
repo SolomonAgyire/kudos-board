@@ -1,100 +1,75 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { MOCK_BOARDS } from '../constants/boardConstants';
 import congratulationsImg from '../assets/images/congratulations.gif';
 
-const useBoards = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+export const useBoards = () => {
   const [boards, setBoards] = useState([]);
-
-  const mockBoards = [
-    {
-      id: 1,
-      title: "Team Celebration",
-      description: "Celebrating our amazing team achievements this quarter!",
-      category: "Celebration",
-      image: congratulationsImg,
-      createdAt: "2024-01-15",
-      kudosCount: 12
-    },
-    {
-      id: 2,
-      title: "Project Success",
-      description: "Thank you everyone for the successful project launch!",
-      category: "Thank You",
-      image: congratulationsImg,
-      createdAt: "2024-01-10",
-      kudosCount: 8
-    },
-    {
-      id: 3,
-      title: "Daily Motivation",
-      description: "Share your daily inspiration and motivational quotes here.",
-      category: "Inspiration",
-      image: congratulationsImg,
-      createdAt: "2024-01-08",
-      kudosCount: 15
-    },
-    {
-      id: 4,
-      title: "Birthday Wishes",
-      description: "Celebrating Sarah's birthday with lots of love and wishes!",
-      category: "Celebration",
-      image: congratulationsImg,
-      createdAt: "2024-01-05",
-      kudosCount: 20
-    },
-    {
-      id: 5,
-      title: "Innovation Awards",
-      description: "Recognizing innovative ideas and creative solutions from our team.",
-      category: "Thank You",
-      image: congratulationsImg,
-      createdAt: "2024-01-03",
-      kudosCount: 6
-    },
-    {
-      id: 6,
-      title: "Weekly Inspiration",
-      description: "Start your week with positive energy and motivational thoughts.",
-      category: "Inspiration",
-      image: congratulationsImg,
-      createdAt: "2024-01-01",
-      kudosCount: 11
-    }
-  ];
+  const [filteredBoards, setFilteredBoards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
-    setBoards(mockBoards);
+    const fetchBoards = async () => {
+      try {
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setBoards(MOCK_BOARDS);
+        setFilteredBoards(MOCK_BOARDS);
+      } catch (err) {
+        setError('Failed to load boards');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBoards();
   }, []);
-  const filteredBoards = useMemo(() => {
+
+  useEffect(() => {
     let filtered = boards;
 
-    if (activeFilter !== 'All') {
-      if (activeFilter === 'Recent') {
-        filtered = [...boards].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      } else {
-        filtered = boards.filter(board => board.category === activeFilter);
-      }
-    }
-    if (searchQuery.trim()) {
+    if (searchTerm) {
+      const searchTermLower = searchTerm.toLowerCase().trim();
       filtered = filtered.filter(board =>
-        board.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        board.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        board.category.toLowerCase().includes(searchQuery.toLowerCase())
+        board.title.toLowerCase().includes(searchTermLower) ||
+        board.description.toLowerCase().includes(searchTermLower) ||
+        (board.author && board.author.toLowerCase().includes(searchTermLower))
       );
     }
 
-    return filtered;
-  }, [searchQuery, activeFilter, boards]);
+    if (selectedCategory !== 'all') {
+      if (selectedCategory === 'recent') {
+        // Show boards created within the last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        filtered = filtered.filter(board => {
+          const boardDate = new Date(board.createdAt);
+          return boardDate >= sevenDaysAgo;
+        });
+      } else {
+        // Regular category filtering
+        filtered = filtered.filter(board => board.category === selectedCategory);
+      }
+    }
+
+    setFilteredBoards(filtered);
+  }, [boards, searchTerm, selectedCategory]);
+
   const handleSearch = () => {
+    // The filtering happens automatically via useEffect when searchTerm changes
+    // This function can be used for additional search actions if needed
+    // The search is already working through real-time filtering
   };
 
   const handleClearSearch = () => {
-    setSearchQuery('');
+    setSearchTerm('');
   };
 
   const handleFilterChange = (filter) => {
-    setActiveFilter(filter);
+    setSelectedCategory(filter);
   };
 
   const handleViewBoard = (boardId) => {
@@ -116,10 +91,13 @@ const useBoards = () => {
   };
 
   return {
-    searchQuery,
-    activeFilter,
     boards: filteredBoards,
-    setSearchQuery,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
     handleSearch,
     handleClearSearch,
     handleFilterChange,

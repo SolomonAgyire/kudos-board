@@ -1,15 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BOARD_CATEGORIES } from '../../constants/boardConstants';
 import './BoardCard.css';
 
 const BoardCard = ({
   board,
-  onViewBoard,
   onDeleteBoard
 }) => {
+  const navigate = useNavigate();
   const { id, title, description, category, image, createdAt, kudosCount } = board;
 
+  const categoryData = BOARD_CATEGORIES.find(cat => cat.value === category);
+  const categoryLabel = categoryData ? categoryData.label : category;
+
   const handleView = () => {
-    onViewBoard(id);
+    navigate(`/board/${id}`);
   };
 
   const handleDelete = () => {
@@ -17,7 +22,7 @@ const BoardCard = ({
   };
 
   return (
-    <div className="board-card">
+    <div className="board-card" onClick={handleView}>
       <div className="board-image-container">
         <img
           src={image}
@@ -25,7 +30,7 @@ const BoardCard = ({
           className="board-image"
         />
         <div className="board-overlay">
-          <span className="board-category">{category}</span>
+          <span className="board-category">{categoryLabel}</span>
           <span className="kudos-count">{kudosCount} kudos</span>
         </div>
       </div>
@@ -49,7 +54,10 @@ const BoardCard = ({
         </button>
         <button
           className="delete-board-btn"
-          onClick={handleDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
         >
           Delete
         </button>

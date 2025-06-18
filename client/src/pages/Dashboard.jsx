@@ -4,29 +4,58 @@ import LogoSection from '../components/LogoSection/LogoSection';
 import SearchBar from '../components/SearchBar/SearchBar';
 import BoardGrid from '../components/BoardGrid/BoardGrid';
 import CreateBoardModal from '../components/CreateBoardModal/CreateBoardModal';
-import useBoards from '../hooks/useBoards';
+import { useBoards } from '../hooks/useBoards';
 
 const Dashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const {
-    searchQuery,
-    activeFilter,
     boards,
-    setSearchQuery,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
     handleSearch,
     handleClearSearch,
     handleFilterChange,
-    handleViewBoard,
     handleDeleteBoard,
     addBoard
   } = useBoards();
 
-  const filterButtons = ['All', 'Recent', 'Celebration', 'Thank You', 'Inspiration'];
+  const filterButtons = ['all', 'celebration', 'thank-you', 'inspiration', 'recent'];
+  const filterLabels = {
+    'all': 'All',
+    'celebration': 'Celebration',
+    'thank-you': 'Thank You',
+    'inspiration': 'Inspiration',
+    'recent': 'Recent'
+  };
 
   const handleCreateSuccess = (newBoard) => {
     addBoard(newBoard);
   };
+
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading boards...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard">
+        <div className="error-container">
+          <p className="error-message">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">
@@ -34,8 +63,8 @@ const Dashboard = () => {
         <LogoSection />
 
         <SearchBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          searchQuery={searchTerm}
+          onSearchChange={setSearchTerm}
           onSearch={handleSearch}
           onClear={handleClearSearch}
           placeholder="Search boards..."
@@ -47,10 +76,10 @@ const Dashboard = () => {
           {filterButtons.map((filter) => (
             <button
               key={filter}
-              className={`filter-btn ${activeFilter === filter ? 'active' : ''}`}
+              className={`filter-btn ${selectedCategory === filter ? 'active' : ''}`}
               onClick={() => handleFilterChange(filter)}
             >
-              {filter}
+              {filterLabels[filter]}
             </button>
           ))}
         </div>
@@ -68,7 +97,6 @@ const Dashboard = () => {
 
         <BoardGrid
           boards={boards}
-          onViewBoard={handleViewBoard}
           onDeleteBoard={handleDeleteBoard}
           emptyMessage="No boards match your search. Try a different search term or create a new board!"
         />
@@ -78,7 +106,6 @@ const Dashboard = () => {
         <p>&copy; 2024 Kudoboard</p>
       </footer>
 
-      {/* Create Board Modal */}
       <CreateBoardModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient } = require('../../generated/prisma');
+const { PrismaClient } = require('../generated/prisma');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -7,15 +7,39 @@ const prisma = new PrismaClient();
 // Get all boards
 router.get('/', async (req, res) => {
   try {
+    const { limit } = req.query;
     const boards = await prisma.board.findMany({
       include: {
         cards: true,
       },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      ...(limit ? { take: parseInt(limit) } : {})
     });
     res.json(boards);
   } catch (error) {
     console.error('Error fetching boards:', error);
     res.status(500).json({ error: 'Failed to fetch boards' });
+  }
+});
+
+// Get recent boards
+router.get('/recent', async (req, res) => {
+  try {
+    const recentBoards = await prisma.board.findMany({
+      take: 6,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        cards: true
+      }
+    });
+    res.json(recentBoards);
+  } catch (error) {
+    console.error('Error fetching recent boards:', error);
+    res.status(500).json({ error: 'Failed to fetch recent boards' });
   }
 });
 

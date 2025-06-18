@@ -1,50 +1,116 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
-import logo from '../assets/images/logo.jpg';
+import LogoSection from '../components/LogoSection/LogoSection';
+import SearchBar from '../components/SearchBar/SearchBar';
+import BoardGrid from '../components/BoardGrid/BoardGrid';
+import CreateBoardModal from '../components/CreateBoardModal/CreateBoardModal';
+import { useBoards } from '../hooks/useBoards';
 
 const Dashboard = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const handleSearch = () => {
+  const {
+    boards,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    handleSearch,
+    handleClearSearch,
+    handleFilterChange,
+    handleDeleteBoard,
+    addBoard
+  } = useBoards();
 
+  const filterButtons = ['all', 'celebration', 'thank-you', 'inspiration', 'recent'];
+  const filterLabels = {
+    'all': 'All',
+    'celebration': 'Celebration',
+    'thank-you': 'Thank You',
+    'inspiration': 'Inspiration',
+    'recent': 'Recent'
   };
 
-  const handleClear = () => {
-    setSearchQuery('');
+  const handleCreateSuccess = (newBoard) => {
+    addBoard(newBoard);
   };
+
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading boards...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard">
+        <div className="error-container">
+          <p className="error-message">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <div className="logo-container">
-          <img src={logo} alt="Kudoboard Logo" className="logo" />
-        </div>
+        <LogoSection />
 
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search boards..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-          <button className="search-btn" onClick={handleSearch}>
-            Search
-          </button>
-          <button className="clear-btn" onClick={handleClear}>
-            Clear
-          </button>
-        </div>
+        <SearchBar
+          searchQuery={searchTerm}
+          onSearchChange={setSearchTerm}
+          onSearch={handleSearch}
+          onClear={handleClearSearch}
+          placeholder="Search boards..."
+        />
       </header>
 
+      <div className="filter-section">
+        <div className="filter-buttons">
+          {filterButtons.map((filter) => (
+            <button
+              key={filter}
+              className={`filter-btn ${selectedCategory === filter ? 'active' : ''}`}
+              onClick={() => handleFilterChange(filter)}
+            >
+              {filterLabels[filter]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <main className="dashboard-main">
-        <p>Dashboard content coming soon...</p>
+        <div className="create-board-container">
+          <button
+            className="create-board-btn"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            Create a New Board
+          </button>
+        </div>
+
+        <BoardGrid
+          boards={boards}
+          onDeleteBoard={handleDeleteBoard}
+          emptyMessage="No boards match your search. Try a different search term or create a new board!"
+        />
       </main>
 
       <footer className="dashboard-footer">
         <p>&copy; 2024 Kudoboard</p>
       </footer>
+
+      <CreateBoardModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateSuccess}
+      />
     </div>
   );
 };

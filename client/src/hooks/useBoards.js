@@ -1,11 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import congratulationsImg from '../assets/images/congratulations.gif';
 
 const useBoards = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const [boards, setBoards] = useState([]);
 
-  // Mock board data
   const mockBoards = [
     {
       id: 1,
@@ -63,21 +63,19 @@ const useBoards = () => {
     }
   ];
 
-  // Filter and search
+  useEffect(() => {
+    setBoards(mockBoards);
+  }, []);
   const filteredBoards = useMemo(() => {
-    let filtered = mockBoards;
+    let filtered = boards;
 
-    // category
     if (activeFilter !== 'All') {
       if (activeFilter === 'Recent') {
-        // sort
-        filtered = [...mockBoards].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        filtered = [...boards].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else {
-        filtered = mockBoards.filter(board => board.category === activeFilter);
+        filtered = boards.filter(board => board.category === activeFilter);
       }
     }
-
-    // search
     if (searchQuery.trim()) {
       filtered = filtered.filter(board =>
         board.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,9 +85,7 @@ const useBoards = () => {
     }
 
     return filtered;
-  }, [searchQuery, activeFilter]);
-
-  // Handler functions
+  }, [searchQuery, activeFilter, boards]);
   const handleSearch = () => {
   };
 
@@ -106,22 +102,30 @@ const useBoards = () => {
 
   const handleDeleteBoard = (boardId) => {
     console.log('Delete board:', boardId);
-    //delete
+    setBoards(prevBoards => prevBoards.filter(board => board.id !== boardId));
+  };
+
+  const addBoard = (newBoard) => {
+    const boardWithId = {
+      ...newBoard,
+      id: Date.now(),
+      createdAt: new Date().toISOString().split('T')[0],
+      kudosCount: 0
+    };
+    setBoards(prevBoards => [boardWithId, ...prevBoards]);
   };
 
   return {
-    // State
     searchQuery,
     activeFilter,
     boards: filteredBoards,
-
-    // Handlers
     setSearchQuery,
     handleSearch,
     handleClearSearch,
     handleFilterChange,
     handleViewBoard,
-    handleDeleteBoard
+    handleDeleteBoard,
+    addBoard
   };
 };
 

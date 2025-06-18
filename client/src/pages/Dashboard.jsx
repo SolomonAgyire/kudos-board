@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Dashboard.css';
 import LogoSection from '../components/LogoSection/LogoSection';
 import SearchBar from '../components/SearchBar/SearchBar';
 import BoardGrid from '../components/BoardGrid/BoardGrid';
+import CreateBoardModal from '../components/CreateBoardModal/CreateBoardModal';
 import useBoards from '../hooks/useBoards';
 
 const Dashboard = () => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   const {
     searchQuery,
     activeFilter,
@@ -15,10 +18,15 @@ const Dashboard = () => {
     handleClearSearch,
     handleFilterChange,
     handleViewBoard,
-    handleDeleteBoard
+    handleDeleteBoard,
+    addBoard
   } = useBoards();
 
   const filterButtons = ['All', 'Recent', 'Celebration', 'Thank You', 'Inspiration'];
+
+  const handleCreateSuccess = (newBoard) => {
+    addBoard(newBoard);
+  };
 
   return (
     <div className="dashboard">
@@ -50,7 +58,10 @@ const Dashboard = () => {
 
       <main className="dashboard-main">
         <div className="create-board-container">
-          <button className="create-board-btn">
+          <button
+            className="create-board-btn"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
             Create a New Board
           </button>
         </div>
@@ -66,6 +77,13 @@ const Dashboard = () => {
       <footer className="dashboard-footer">
         <p>&copy; 2024 Kudoboard</p>
       </footer>
+
+      {/* Create Board Modal */}
+      <CreateBoardModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateSuccess}
+      />
     </div>
   );
 };

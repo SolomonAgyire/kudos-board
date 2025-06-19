@@ -75,5 +75,44 @@ export const api = {
     });
     if (!response.ok) throw new Error('Failed to upvote kudos card');
     return response.json();
+  },
+
+  getComments: async (cardId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/card/${cardId}`);
+    if (!response.ok) throw new Error('Failed to fetch comments');
+    return response.json();
+  },
+
+  createComment: async (commentData) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(commentData),
+    });
+    if (!response.ok) throw new Error('Failed to create comment');
+    return response.json();
+  },
+
+  updateComment: async (commentId, commentData) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(commentData),
+    });
+    if (!response.ok) throw new Error('Failed to update comment');
+    return response.json();
+  },
+
+  deleteComment: async (commentId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete comment');
+    if (response.status === 204) return null;
+    return response.json();
   }
 };

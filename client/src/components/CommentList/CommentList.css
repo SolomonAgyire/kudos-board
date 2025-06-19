@@ -1,0 +1,18 @@
+.comment-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .loading-message,
+  .no-comments {
+    text-align: center;
+    padding: 2rem;
+    color: #718096;
+    font-style: italic;
+  }
+
+  .no-comments {
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e0;
+  }

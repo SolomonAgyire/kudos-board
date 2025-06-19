@@ -3,6 +3,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
+    await prisma.comment.deleteMany({});
+
     await prisma.kudosCard.deleteMany({});
     await prisma.board.deleteMany({});
 
@@ -271,6 +273,25 @@ async function main() {
       });
 
       console.log(`Created board ${board.id} with ${board.cards.length} cards`);
+    }
+
+    // some sample comments to cards
+    const commentsData = [
+      { message: "This is so thoughtful, thank you!", author: "Alex Johnson", cardId: 1 },
+      { message: "Really appreciate your help on this!", author: "Maria Garcia", cardId: 1 },
+      { message: "You're awesome! Thanks for the support.", author: "David Kumar", cardId: 2 },
+      { message: "This made my day, thank you!", author: "Sarah Miller", cardId: 3 },
+      { message: "Great job on this project!", author: "Tom Anderson", cardId: 4 },
+      { message: "Your help was invaluable!", author: "Emily Chen", cardId: 5 },
+      { message: "Thanks for going above and beyond!", author: "James Wilson", cardId: 6 },
+      { message: "Really appreciate your mentorship!", author: "Nina Patel", cardId: 7 },
+      { message: "You're a lifesaver!", author: "Robert Kim", cardId: 8 },
+      { message: "Thank you for your patience!", author: "Laura Martinez", cardId: 9 }
+    ];
+
+    console.log('Creating sample comments...');
+    for (const commentData of commentsData) {
+      await prisma.comment.create({ data: commentData });
     }
 
     console.log('Seeding completed successfully');

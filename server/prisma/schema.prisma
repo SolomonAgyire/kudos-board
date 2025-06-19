@@ -27,14 +27,25 @@ model Board {
 }
 
 model KudosCard {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(80)
-  description String   @db.Text
-  author      String?  @db.VarChar(50)
-  image       String   @db.Text
-  upvotes     Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(80)
+  description String    @db.Text
+  author      String?   @db.VarChar(50)
+  image       String    @db.Text
+  upvotes     Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  board       Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId     Int
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  message   String    @db.Text
+  author    String?   @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  card      KudosCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId    Int
 }

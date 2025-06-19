@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useCreateKudos } from '../../hooks/useCreateKudos';
-import { formatFileSize } from '../../utils/fileUtils';
+import GifSearch from '../GifSearch/GifSearch';
 import './AddKudosModal.css';
 
 const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
   const modalRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const [isDragOver, setIsDragOver] = useState(false);
 
   const {
     formData,
     errors,
     isSubmitting,
-    previewUrl,
     canSubmit,
     handleInputChange,
-    handleImageChange,
+    handleGifSelect,
     submitForm,
     resetForm,
     errorMessages
@@ -45,42 +42,6 @@ const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setIsDragOver(false);
-
-    const files = Array.from(e.dataTransfer.files);
-    const imageFile = files.find(file => file.type.startsWith('image/'));
-
-    if (imageFile) {
-      handleImageChange(imageFile);
-    }
-  };
-
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleImageChange(file);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    handleImageChange(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -106,7 +67,7 @@ const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
         <form onSubmit={handleSubmit} className="kudos-form">
           <div className="form-group">
             <label htmlFor="title" className="form-label">
-              Card Title *
+              Card Title
             </label>
             <input
               type="text"
@@ -125,7 +86,7 @@ const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
 
           <div className="form-group">
             <label htmlFor="description" className="form-label">
-              Description *
+              Description
             </label>
             <textarea
               id="description"
@@ -166,56 +127,11 @@ const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
 
           <div className="form-group">
             <label className="form-label">
-              Image/GIF *
+              Select a GIF
             </label>
-            <div
-              className={`image-upload-area ${isDragOver ? 'drag-over' : ''} ${errors.image ? 'error' : ''}`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              {previewUrl ? (
-                <div className="image-preview">
-                  <img src={previewUrl} alt="Preview" className="preview-image" />
-                  <div className="image-overlay">
-                    <button
-                      type="button"
-                      className="remove-image-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveImage();
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  {formData.image && (
-                    <div className="file-info">
-                      <span className="file-name">{formData.image.name}</span>
-                      <span className="file-size">{formatFileSize(formData.image.size)}</span>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="upload-placeholder">
-                  <div className="upload-icon">📁</div>
-                  <p className="upload-text">
-                    Drag & drop an image here, or click to select
-                  </p>
-                  <p className="upload-hint">
-                    Supports: JPEG, PNG, GIF, WebP (max 5MB)
-                  </p>
-                </div>
-              )}
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden-file-input"
-              disabled={isSubmitting}
+            <GifSearch
+              onSelect={handleGifSelect}
+              selectedGifUrl={formData.image}
             />
             {errors.image && (
               <span className="error-message">{errors.image}</span>

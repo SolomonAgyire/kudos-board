@@ -5,13 +5,11 @@ import {
   CARD_ERROR_MESSAGES
 } from '../constants/boardConstants';
 import { validateField, isFormValid } from '../utils/validation';
-import { createPreviewURL, revokePreviewURL } from '../utils/fileUtils';
 
 export const useCreateKudos = () => {
   const [formData, setFormData] = useState(DEFAULT_CARD_VALUES);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -25,19 +23,8 @@ export const useCreateKudos = () => {
     }
   };
 
-  const handleImageChange = (file) => {
-    if (previewUrl) {
-      revokePreviewURL(previewUrl);
-    }
-
-    if (file) {
-      const newPreviewUrl = createPreviewURL(file);
-      setPreviewUrl(newPreviewUrl);
-      handleInputChange('image', file);
-    } else {
-      setPreviewUrl(null);
-      handleInputChange('image', null);
-    }
+  const handleGifSelect = (gifUrl) => {
+    handleInputChange('image', gifUrl);
   };
 
   const validateForm = () => {
@@ -78,7 +65,7 @@ export const useCreateKudos = () => {
         title: formData.title.trim(),
         description: formData.description.trim(),
         author: formData.author.trim() || '',
-        image: previewUrl,
+        image: formData.image,
         upvotes: 0,
         createdAt: new Date().toISOString()
       };
@@ -98,20 +85,15 @@ export const useCreateKudos = () => {
     setFormData(DEFAULT_CARD_VALUES);
     setErrors({});
     setIsSubmitting(false);
-    if (previewUrl) {
-      revokePreviewURL(previewUrl);
-      setPreviewUrl(null);
-    }
-  }, [previewUrl]);
+  }, []);
 
   return {
     formData,
     errors,
     isSubmitting,
-    previewUrl,
     canSubmit,
     handleInputChange,
-    handleImageChange,
+    handleGifSelect,
     submitForm,
     resetForm,
     errorMessages: CARD_ERROR_MESSAGES

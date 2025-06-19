@@ -25,8 +25,7 @@ export const VALIDATION_RULES = {
   },
   image: {
     required: true,
-    maxSize: 5 * 1024 * 1024,
-    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    isUrl: true
   }
 };
 
@@ -48,8 +47,7 @@ export const CARD_VALIDATION_RULES = {
   },
   image: {
     required: true,
-    maxSize: 5 * 1024 * 1024,
-    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    isUrl: true
   }
 };
 
@@ -72,12 +70,10 @@ export const ERROR_MESSAGES = {
     required: 'Please select a category'
   },
   image: {
-    required: 'Please upload an image for your board',
-    invalidType: 'Please upload a valid image file (JPEG, PNG, GIF, or WebP)',
-    tooLarge: `Image size cannot exceed ${VALIDATION_RULES.image.maxSize / (1024 * 1024)}MB`
+    required: 'Please select a GIF',
+    invalidUrl: 'Invalid GIF URL. Please select another GIF'
   },
   general: {
-    uploadFailed: 'Failed to upload image. Please try again.',
     createFailed: 'Failed to create board. Please try again.',
     networkError: 'Network error. Please check your connection.'
   }
@@ -99,12 +95,10 @@ export const CARD_ERROR_MESSAGES = {
     maxLength: `Author name cannot exceed ${CARD_VALIDATION_RULES.author.maxLength} characters`
   },
   image: {
-    required: 'Please upload an image for your card',
-    invalidType: 'Please upload a valid image file (JPEG, PNG, GIF, or WebP)',
-    tooLarge: `Image size cannot exceed ${CARD_VALIDATION_RULES.image.maxSize / (1024 * 1024)}MB`
+    required: 'Please select a GIF',
+    invalidUrl: 'Invalid GIF URL. Please select another GIF'
   },
   general: {
-    uploadFailed: 'Failed to upload image. Please try again.',
     createFailed: 'Failed to create card. Please try again.',
     networkError: 'Network error. Please check your connection.'
   }
@@ -132,7 +126,7 @@ export const MOCK_BOARDS = [
     description: "Celebrating our amazing team achievements this quarter",
     category: "celebration",
     author: "Sarah Johnson",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 12,
     createdAt: "2024-01-15"
   },
@@ -142,7 +136,7 @@ export const MOCK_BOARDS = [
     description: "A space to express gratitude to our colleagues",
     category: "thank-you",
     author: "Mike Chen",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 8,
     createdAt: "2024-01-10"
   },
@@ -152,7 +146,7 @@ export const MOCK_BOARDS = [
     description: "Share motivational quotes and inspiring stories",
     category: "inspiration",
     author: "",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 15,
     createdAt: "2024-01-08"
   },
@@ -162,7 +156,7 @@ export const MOCK_BOARDS = [
     description: "Recent news and updates from our team",
     category: "celebration",
     author: "Lisa Park",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 6,
     createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 1 day ago
   },
@@ -172,7 +166,7 @@ export const MOCK_BOARDS = [
     description: "Celebrating our most recent accomplishments",
     category: "thank-you",
     author: "Tom Wilson",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 9,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 3 days ago
   },
@@ -182,7 +176,7 @@ export const MOCK_BOARDS = [
     description: "Showcasing the best moments from this week",
     category: "inspiration",
     author: "Alex Chen",
-    image: "/src/assets/images/congratulations.gif",
+    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
     kudosCount: 11,
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 5 days ago
   }
@@ -196,7 +190,7 @@ export const MOCK_CARDS = {
       title: "Amazing Quarter Results!",
       description: "Our team exceeded all expectations this quarter. Great job everyone!",
       author: "John Smith",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 15,
       createdAt: "2024-01-16"
     },
@@ -206,7 +200,7 @@ export const MOCK_CARDS = {
       title: "New Client Success",
       description: "Successfully onboarded three major clients this month. Fantastic teamwork!",
       author: "Emma Davis",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 12,
       createdAt: "2024-01-15"
     },
@@ -216,7 +210,7 @@ export const MOCK_CARDS = {
       title: "Innovation Award",
       description: "Our innovative approach won the company-wide innovation award!",
       author: "",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 20,
       createdAt: "2024-01-14"
     },
@@ -226,7 +220,7 @@ export const MOCK_CARDS = {
       title: "Team Spirit",
       description: "The collaboration and support within our team is truly inspiring.",
       author: "Alex Rodriguez",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 8,
       createdAt: "2024-01-13"
     }
@@ -238,7 +232,7 @@ export const MOCK_CARDS = {
       title: "Thank You Sarah!",
       description: "Thank you for always being there to help with complex problems.",
       author: "Mike Johnson",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 10,
       createdAt: "2024-01-12"
     },
@@ -248,7 +242,7 @@ export const MOCK_CARDS = {
       title: "Grateful for Support",
       description: "I'm grateful for all the support during my project deadline.",
       author: "Lisa Chen",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 7,
       createdAt: "2024-01-11"
     }
@@ -260,7 +254,7 @@ export const MOCK_CARDS = {
       title: "Never Give Up",
       description: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
       author: "Winston Churchill",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 25,
       createdAt: "2024-01-10"
     },
@@ -270,7 +264,7 @@ export const MOCK_CARDS = {
       title: "Dream Big",
       description: "The future belongs to those who believe in the beauty of their dreams.",
       author: "",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 18,
       createdAt: "2024-01-09"
     },
@@ -280,7 +274,7 @@ export const MOCK_CARDS = {
       title: "Progress Over Perfection",
       description: "Small progress is still progress. Keep moving forward!",
       author: "Team Lead",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 14,
       createdAt: "2024-01-08"
     }
@@ -292,7 +286,7 @@ export const MOCK_CARDS = {
       title: "New Feature Launch",
       description: "Just launched our new dashboard feature. User feedback has been amazing!",
       author: "Product Team",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 22,
       createdAt: "2024-01-20"
     },
@@ -302,7 +296,7 @@ export const MOCK_CARDS = {
       title: "Client Meeting Success",
       description: "Had a fantastic meeting with our biggest client today. They're impressed!",
       author: "Sales Team",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 16,
       createdAt: "2024-01-19"
     }
@@ -314,7 +308,7 @@ export const MOCK_CARDS = {
       title: "Record Breaking Month",
       description: "This month we broke all previous records for user engagement!",
       author: "Analytics Team",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 28,
       createdAt: "2024-01-18"
     },
@@ -324,7 +318,7 @@ export const MOCK_CARDS = {
       title: "Team Collaboration Win",
       description: "The way our teams worked together on the recent project was incredible.",
       author: "Project Manager",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 19,
       createdAt: "2024-01-17"
     }
@@ -336,7 +330,7 @@ export const MOCK_CARDS = {
       title: "Innovation Workshop",
       description: "Yesterday's innovation workshop generated so many great ideas!",
       author: "Innovation Team",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 21,
       createdAt: "2024-01-16"
     },
@@ -346,7 +340,7 @@ export const MOCK_CARDS = {
       title: "Customer Satisfaction Peak",
       description: "Our customer satisfaction scores reached an all-time high this week!",
       author: "Customer Success",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 24,
       createdAt: "2024-01-15"
     },
@@ -356,7 +350,7 @@ export const MOCK_CARDS = {
       title: "Code Review Excellence",
       description: "The quality of code reviews this week has been outstanding. Great work!",
       author: "Tech Lead",
-      image: "/src/assets/images/congratulations.gif",
+      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
       upvotes: 17,
       createdAt: "2024-01-14"
     }

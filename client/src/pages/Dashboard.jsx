@@ -6,6 +6,15 @@ import BoardGrid from '../components/BoardGrid/BoardGrid';
 import CreateBoardModal from '../components/CreateBoardModal/CreateBoardModal';
 import { useBoards } from '../hooks/useBoards';
 
+const filterButtons = ['all', 'celebration', 'thank-you', 'inspiration', 'recent'];
+const filterLabels = {
+  'all': 'All',
+  'celebration': 'Celebration',
+  'thank-you': 'Thank You',
+  'inspiration': 'Inspiration',
+  'recent': 'Recent'
+};
+
 const Dashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -16,25 +25,11 @@ const Dashboard = () => {
     searchTerm,
     setSearchTerm,
     selectedCategory,
-    handleSearch,
     handleClearSearch,
     handleFilterChange,
     handleDeleteBoard,
     addBoard
   } = useBoards();
-
-  const filterButtons = ['all', 'celebration', 'thank-you', 'inspiration', 'recent'];
-  const filterLabels = {
-    'all': 'All',
-    'celebration': 'Celebration',
-    'thank-you': 'Thank You',
-    'inspiration': 'Inspiration',
-    'recent': 'Recent'
-  };
-
-  const handleCreateSuccess = (newBoard) => {
-    addBoard(newBoard);
-  };
 
   if (loading) {
     return (
@@ -61,11 +56,9 @@ const Dashboard = () => {
     <div className="dashboard">
       <header className="dashboard-header">
         <LogoSection />
-
         <SearchBar
           searchQuery={searchTerm}
           onSearchChange={setSearchTerm}
-          onSearch={handleSearch}
           onClear={handleClearSearch}
           placeholder="Search boards..."
         />
@@ -87,10 +80,7 @@ const Dashboard = () => {
 
       <main className="dashboard-main">
         <div className="create-board-container">
-          <button
-            className="create-board-btn"
-            onClick={() => setIsCreateModalOpen(true)}
-          >
+          <button className="create-board-btn" onClick={() => setIsCreateModalOpen(true)}>
             Create a New Board
           </button>
         </div>
@@ -109,7 +99,7 @@ const Dashboard = () => {
       <CreateBoardModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={handleCreateSuccess}
+        onSuccess={addBoard}
       />
     </div>
   );

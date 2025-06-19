@@ -1,7 +1,10 @@
 {
-  "name": "kudosboard-server",
+  "name": "board",
   "version": "1.0.0",
   "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -10,16 +13,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Backend server for Kudosboard application",
   "dependencies": {
-    "@prisma/client": "^6.10.0",
+    "@prisma/client": "^6.10.1",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "pg": "^8.16.1"
   },
   "devDependencies": {
     "dotenv": "^16.5.0",
     "nodemon": "^3.1.10",
-    "prisma": "^6.10.0"
-  }
+    "prisma": "^6.10.1"
+  },
+  "description": ""
 }

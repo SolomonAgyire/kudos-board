@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { MOCK_BOARDS } from '../constants/boardConstants';
-import congratulationsImg from '../assets/images/congratulations.gif';
+import { api } from '../services/api';
 
 export const useBoards = () => {
   const [boards, setBoards] = useState([]);
-  const [filteredBoards, setFilteredBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,10 +12,10 @@ export const useBoards = () => {
     const fetchBoards = async () => {
       try {
         setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setBoards(MOCK_BOARDS);
-        setFilteredBoards(MOCK_BOARDS);
+        const data = await api.getBoards();
+        setBoards(data);
       } catch (err) {
+        console.error('Error fetching boards:', err);
         setError('Failed to load boards');
       } finally {
         setLoading(false);
@@ -27,40 +25,6 @@ export const useBoards = () => {
     fetchBoards();
   }, []);
 
-  useEffect(() => {
-    let filtered = boards;
-
-    if (searchTerm) {
-      const searchTermLower = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(board =>
-        board.title.toLowerCase().includes(searchTermLower) ||
-        board.description.toLowerCase().includes(searchTermLower) ||
-        (board.author && board.author.toLowerCase().includes(searchTermLower))
-      );
-    }
-
-    if (selectedCategory !== 'all') {
-      if (selectedCategory === 'recent') {
-        // Show boards created within the last 7 days
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        filtered = filtered.filter(board => {
-          const boardDate = new Date(board.createdAt);
-          return boardDate >= sevenDaysAgo;
-        });
-      } else {
-        // Regular category filtering
-        filtered = filtered.filter(board => board.category === selectedCategory);
-      }
-    }
-
-    setFilteredBoards(filtered);
-  }, [boards, searchTerm, selectedCategory]);
-
-  const handleSearch = () => {
-  };
-
   const handleClearSearch = () => {
     setSearchTerm('');
   };
@@ -69,23 +33,44 @@ export const useBoards = () => {
     setSelectedCategory(filter);
   };
 
-  const handleViewBoard = (boardId) => {
+  const handleDeleteBoard = async (boardId) => {
+    try {
+      await api.deleteBoard(boardId);
+      setBoards(prevBoards => prevBoards.filter(board => board.id !== boardId));
+    } catch (err) {
+      console.error('Error deleting board:', err);
+      setError('Failed to delete board');
+    }
   };
 
-  const handleDeleteBoard = (boardId) => {
-    console.log('Delete board:', boardId);
-    setBoards(prevBoards => prevBoards.filter(board => board.id !== boardId));
+  const addBoard = async (newBoard) => {
+    try {
+      const createdBoard = await api.createBoard(newBoard);
+      setBoards(prevBoards => [createdBoard, ...prevBoards]);
+      return createdBoard;
+    } catch (err) {
+      console.error('Error creating board:', err);
+      setError('Failed to create board');
+      throw err;
+    }
   };
 
-  const addBoard = (newBoard) => {
-    const boardWithId = {
-      ...newBoard,
-      id: Date.now(),
-      createdAt: new Date().toISOString().split('T')[0],
-      kudosCount: 0
-    };
-    setBoards(prevBoards => [boardWithId, ...prevBoards]);
-  };
+  // Simple filtering - no complex logic
+  let filteredBoards = boards;
+
+  if (selectedCategory === 'recent') {
+    filteredBoards = boards.slice(0, 6);
+  } else if (selectedCategory !== 'all') {
+    filteredBoards = boards.filter(board => board.category === selectedCategory);
+  }
+
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase().trim();
+    filteredBoards = filteredBoards.filter(board =>
+      board.title.toLowerCase().includes(term) ||
+      board.description.toLowerCase().includes(term)
+    );
+  }
 
   return {
     boards: filteredBoards,
@@ -95,10 +80,8 @@ export const useBoards = () => {
     setSearchTerm,
     selectedCategory,
     setSelectedCategory,
-    handleSearch,
     handleClearSearch,
     handleFilterChange,
-    handleViewBoard,
     handleDeleteBoard,
     addBoard
   };

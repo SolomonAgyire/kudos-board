@@ -53,10 +53,9 @@ const AddKudosModal = ({ isOpen, onClose, onSuccess, boardId, boardTitle }) => {
         tabIndex={-1}
       >
         <div className="modal-header">
-          <h2 className="modal-title">Add New Card</h2>
-          <p className="modal-subtitle">to "{boardTitle}"</p>
+          <h2 className="modal-title">Add New Card to "{boardTitle}"</h2>
           <button
-            className="modal-close-btn"
+            className="close-btn"
             onClick={onClose}
             type="button"
           >

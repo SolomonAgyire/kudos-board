@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient } = require('../../generated/prisma');
+const { PrismaClient } = require('@prisma/client');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -54,7 +54,6 @@ router.post('/', async (req, res) => {
       },
     });
 
-    // Update the kudosCount
     await prisma.board.update({
       where: { id: parseInt(boardId) },
       data: {
@@ -71,7 +70,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update
+// Update a kudos card
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -93,7 +92,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Upvote
+// Upvote a kudos card
 router.post('/:id/upvote', async (req, res) => {
   try {
     const { id } = req.params;
@@ -112,10 +111,10 @@ router.post('/:id/upvote', async (req, res) => {
   }
 });
 
+// Delete a kudos card
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
 
     const kudosCard = await prisma.kudosCard.findUnique({
       where: { id: parseInt(id) },

@@ -1,7 +1,34 @@
 export const BOARD_CATEGORIES = [
-  { value: 'celebration', label: 'Celebration', color: '#667eea' },
-  { value: 'thank-you', label: 'Thank You', color: '#f093fb' },
-  { value: 'inspiration', label: 'Inspiration', color: '#4facfe' }
+  {
+    value: 'celebration',
+    label: 'Celebration',
+    color: '#667eea',
+    defaultImages: [
+      'https://images.unsplash.com/photo-1513151233558-d860c5398176',
+      'https://images.unsplash.com/photo-1531686264889-56fdcabd163f',
+      'https://images.unsplash.com/photo-1530103862676-de8c9debad1d'
+    ]
+  },
+  {
+    value: 'thank-you',
+    label: 'Thank You',
+    color: '#f093fb',
+    defaultImages: [
+      'https://images.unsplash.com/photo-1606103920295-9a091d2923b3',
+      'https://images.unsplash.com/photo-1499744937866-d7e566a20a61',
+      'https://images.unsplash.com/photo-1522598134697-f34a6d8aa3c4'
+    ]
+  },
+  {
+    value: 'inspiration',
+    label: 'Inspiration',
+    color: '#4facfe',
+    defaultImages: [
+      'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e',
+      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8',
+      'https://images.unsplash.com/photo-1546410531-bb4caa6b424d'
+    ]
+  }
 ];
 
 export const VALIDATION_RULES = {
@@ -24,7 +51,7 @@ export const VALIDATION_RULES = {
     required: true
   },
   image: {
-    required: true,
+    required: false,
     isUrl: true
   }
 };
@@ -117,242 +144,4 @@ export const DEFAULT_CARD_VALUES = {
   description: '',
   author: '',
   image: null
-};
-
-export const MOCK_BOARDS = [
-  {
-    id: 1,
-    title: "Team Celebration",
-    description: "Celebrating our amazing team achievements this quarter",
-    category: "celebration",
-    author: "Sarah Johnson",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 12,
-    createdAt: "2024-01-15"
-  },
-  {
-    id: 2,
-    title: "Thank You Notes",
-    description: "A space to express gratitude to our colleagues",
-    category: "thank-you",
-    author: "Mike Chen",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 8,
-    createdAt: "2024-01-10"
-  },
-  {
-    id: 3,
-    title: "Daily Inspiration",
-    description: "Share motivational quotes and inspiring stories",
-    category: "inspiration",
-    author: "",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 15,
-    createdAt: "2024-01-08"
-  },
-  {
-    id: 4,
-    title: "Latest Updates",
-    description: "Recent news and updates from our team",
-    category: "celebration",
-    author: "Lisa Park",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 6,
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 1 day ago
-  },
-  {
-    id: 5,
-    title: "Recent Wins",
-    description: "Celebrating our most recent accomplishments",
-    category: "thank-you",
-    author: "Tom Wilson",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 9,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 3 days ago
-  },
-  {
-    id: 6,
-    title: "This Week's Highlights",
-    description: "Showcasing the best moments from this week",
-    category: "inspiration",
-    author: "Alex Chen",
-    image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-    kudosCount: 11,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 5 days ago
-  }
-];
-
-export const MOCK_CARDS = {
-  1: [
-    {
-      id: 1,
-      boardId: 1,
-      title: "Amazing Quarter Results!",
-      description: "Our team exceeded all expectations this quarter. Great job everyone!",
-      author: "John Smith",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 15,
-      createdAt: "2024-01-16"
-    },
-    {
-      id: 2,
-      boardId: 1,
-      title: "New Client Success",
-      description: "Successfully onboarded three major clients this month. Fantastic teamwork!",
-      author: "Emma Davis",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 12,
-      createdAt: "2024-01-15"
-    },
-    {
-      id: 3,
-      boardId: 1,
-      title: "Innovation Award",
-      description: "Our innovative approach won the company-wide innovation award!",
-      author: "",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 20,
-      createdAt: "2024-01-14"
-    },
-    {
-      id: 4,
-      boardId: 1,
-      title: "Team Spirit",
-      description: "The collaboration and support within our team is truly inspiring.",
-      author: "Alex Rodriguez",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 8,
-      createdAt: "2024-01-13"
-    }
-  ],
-  2: [
-    {
-      id: 5,
-      boardId: 2,
-      title: "Thank You Sarah!",
-      description: "Thank you for always being there to help with complex problems.",
-      author: "Mike Johnson",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 10,
-      createdAt: "2024-01-12"
-    },
-    {
-      id: 6,
-      boardId: 2,
-      title: "Grateful for Support",
-      description: "I'm grateful for all the support during my project deadline.",
-      author: "Lisa Chen",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 7,
-      createdAt: "2024-01-11"
-    }
-  ],
-  3: [
-    {
-      id: 7,
-      boardId: 3,
-      title: "Never Give Up",
-      description: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-      author: "Winston Churchill",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 25,
-      createdAt: "2024-01-10"
-    },
-    {
-      id: 8,
-      boardId: 3,
-      title: "Dream Big",
-      description: "The future belongs to those who believe in the beauty of their dreams.",
-      author: "",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 18,
-      createdAt: "2024-01-09"
-    },
-    {
-      id: 9,
-      boardId: 3,
-      title: "Progress Over Perfection",
-      description: "Small progress is still progress. Keep moving forward!",
-      author: "Team Lead",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 14,
-      createdAt: "2024-01-08"
-    }
-  ],
-  4: [
-    {
-      id: 10,
-      boardId: 4,
-      title: "New Feature Launch",
-      description: "Just launched our new dashboard feature. User feedback has been amazing!",
-      author: "Product Team",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 22,
-      createdAt: "2024-01-20"
-    },
-    {
-      id: 11,
-      boardId: 4,
-      title: "Client Meeting Success",
-      description: "Had a fantastic meeting with our biggest client today. They're impressed!",
-      author: "Sales Team",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 16,
-      createdAt: "2024-01-19"
-    }
-  ],
-  5: [
-    {
-      id: 12,
-      boardId: 5,
-      title: "Record Breaking Month",
-      description: "This month we broke all previous records for user engagement!",
-      author: "Analytics Team",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 28,
-      createdAt: "2024-01-18"
-    },
-    {
-      id: 13,
-      boardId: 5,
-      title: "Team Collaboration Win",
-      description: "The way our teams worked together on the recent project was incredible.",
-      author: "Project Manager",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 19,
-      createdAt: "2024-01-17"
-    }
-  ],
-  6: [
-    {
-      id: 14,
-      boardId: 6,
-      title: "Innovation Workshop",
-      description: "Yesterday's innovation workshop generated so many great ideas!",
-      author: "Innovation Team",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 21,
-      createdAt: "2024-01-16"
-    },
-    {
-      id: 15,
-      boardId: 6,
-      title: "Customer Satisfaction Peak",
-      description: "Our customer satisfaction scores reached an all-time high this week!",
-      author: "Customer Success",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 24,
-      createdAt: "2024-01-15"
-    },
-    {
-      id: 16,
-      boardId: 6,
-      title: "Code Review Excellence",
-      description: "The quality of code reviews this week has been outstanding. Great work!",
-      author: "Tech Lead",
-      image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDJ6Y3E4Y2JjOGxiMzQ5MWJjNmRiOWJjMjIzNjBkNjg4MmZiZjM5YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3oz8xAFtqoOUUrsh7W/giphy.gif",
-      upvotes: 17,
-      createdAt: "2024-01-14"
-    }
-  ]
 };

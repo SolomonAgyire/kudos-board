@@ -1,19 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MOCK_BOARDS, MOCK_CARDS, BOARD_CATEGORIES } from '../constants/boardConstants';
+import { BOARD_CATEGORIES } from '../constants/boardConstants';
 import AddKudosModal from '../components/AddKudosModal/AddKudosModal';
 import KudosGrid from '../components/KudosGrid/KudosGrid';
+import { api } from '../services/api';
 import './BoardDetails.css';
 
 const BoardDetails = () => {
   const { boardId } = useParams();
   const navigate = useNavigate();
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
-  const [cards, setCards] = useState(MOCK_CARDS[boardId] || []);
+  const [cards, setCards] = useState([]);
+  const [board, setBoard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const board = MOCK_BOARDS.find(b => b.id === parseInt(boardId));
+  useEffect(() => {
+    const fetchBoardAndCards = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  if (!board) {
+        // Fetch board details
+        const board = await api.getBoard(boardId);
+        setBoard(board);
+
+        // Fetch cards for board
+        const cardsData = await api.getKudosCards(boardId);
+        setCards(cardsData);
+      } catch (err) {
+        console.error('Error fetching board details:', err);
+        setError(err.message || 'Failed to load board details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBoardAndCards();
+  }, [boardId]);
+
+  if (loading) {
+    return (
+      <div className="board-details">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading board details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !board) {
     return (
       <div className="board-details">
         <div className="error-container">
@@ -30,23 +67,37 @@ const BoardDetails = () => {
   const categoryData = BOARD_CATEGORIES.find(cat => cat.value === board.category);
   const categoryColor = categoryData ? categoryData.color : '#667eea';
 
-  const handleAddCard = (newCard) => {
-    setCards(prevCards => [...prevCards, newCard]);
-    setIsAddCardModalOpen(false);
+  const handleAddCard = async (newCard) => {
+    try {
+      const createdCard = await api.createKudosCard(boardId, newCard);
+      setCards(prevCards => [...prevCards, createdCard]);
+      setIsAddCardModalOpen(false);
+    } catch (err) {
+      console.error('Error creating card:', err);
+
+    }
   };
 
-  const handleUpvoteCard = (cardId) => {
-    setCards(prevCards =>
-      prevCards.map(card =>
-        card.id === cardId
-          ? { ...card, upvotes: card.upvotes + 1 }
-          : card
-      )
-    );
+  const handleDeleteCard = async (cardId) => {
+    try {
+      await api.deleteKudosCard(boardId, cardId);
+      setCards(prevCards => prevCards.filter(card => card.id !== cardId));
+    } catch (err) {
+      console.error('Error deleting card:', err);
+    }
   };
 
-  const handleDeleteCard = (cardId) => {
-    setCards(prevCards => prevCards.filter(card => card.id !== cardId));
+  const handleUpvoteCard = async (cardId) => {
+    try {
+      const updatedCard = await api.upvoteKudosCard(cardId);
+      setCards(prevCards =>
+        prevCards.map(card =>
+          card.id === cardId ? { ...card, upvotes: updatedCard.upvotes } : card
+        )
+      );
+    } catch (err) {
+      console.error('Error upvoting card:', err);
+    }
   };
 
   const handleBackClick = (e) => {
@@ -96,8 +147,8 @@ const BoardDetails = () => {
       <main className="board-main">
         <KudosGrid
           cards={cards}
-          onUpvoteCard={handleUpvoteCard}
           onDeleteCard={handleDeleteCard}
+          onUpvoteCard={handleUpvoteCard}
           emptyMessage="No cards yet. Be the first to add a kudos card!"
         />
       </main>

@@ -1,6 +1,11 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -11,25 +16,25 @@ datasource db {
 model Board {
   id          Int         @id @default(autoincrement())
   title       String      @db.VarChar(100)
-  description String
+  description String      @db.Text
   category    String      @db.VarChar(50)
   author      String?     @db.VarChar(50)
-  image       String
+  image       String      @db.Text
   kudosCount  Int         @default(0)
   createdAt   DateTime    @default(now())
-  updateAt    DateTime    @updatedAt
-  cards       kudosCard[]
+  updatedAt   DateTime    @updatedAt
+  cards       KudosCard[]
 }
 
-model kudosCard {
+model KudosCard {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(80)
-  description String
+  description String   @db.Text
   author      String?  @db.VarChar(50)
-  image       String
+  image       String   @db.Text
   upvotes     Int      @default(0)
   createdAt   DateTime @default(now())
-  updateAt    DateTime @updatedAt
+  updatedAt   DateTime @updatedAt
   board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId     Int
 }

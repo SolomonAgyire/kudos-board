@@ -15,7 +15,8 @@ const GifSearch = ({ onSelect, selectedGifUrl }) => {
         setError(null);
 
         const endpoint = searchTerm.trim() ? 'search' : 'trending';
-        const url = `${GIPHY_CONFIG.API_URL}/${endpoint}?api_key=${GIPHY_CONFIG.API_KEY}&limit=${GIPHY_CONFIG.LIMIT}&rating=${GIPHY_CONFIG.RATING}${searchTerm.trim() ? `&q=${encodeURIComponent(searchTerm)}` : ''}`;
+        const limit = 6; // Only load 6 GIFs at a time
+        const url = `${GIPHY_CONFIG.API_URL}/${endpoint}?api_key=${GIPHY_CONFIG.API_KEY}&limit=${limit}&rating=${GIPHY_CONFIG.RATING}${searchTerm.trim() ? `&q=${encodeURIComponent(searchTerm)}` : ''}`;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch GIFs');
@@ -33,7 +34,7 @@ const GifSearch = ({ onSelect, selectedGifUrl }) => {
       }
     };
 
-    const debounceTimeout = setTimeout(fetchGifs, 300);
+    const debounceTimeout = setTimeout(fetchGifs, 500); // Increased debounce time
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);
 

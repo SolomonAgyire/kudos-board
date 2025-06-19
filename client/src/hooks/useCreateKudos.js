@@ -1,10 +1,11 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   DEFAULT_CARD_VALUES,
   CARD_VALIDATION_RULES,
   CARD_ERROR_MESSAGES
 } from '../constants/boardConstants';
-import { validateField, isFormValid } from '../utils/validation';
+import { validateField } from '../utils/validation';
+import { api } from '../services/api';
 
 export const useCreateKudos = () => {
   const [formData, setFormData] = useState(DEFAULT_CARD_VALUES);
@@ -41,15 +42,11 @@ export const useCreateKudos = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const canSubmit = useMemo(() => {
-    const hasRequiredFields = formData.title.trim() &&
-                             formData.description.trim() &&
-                             formData.image;
-    const hasNoErrors = Object.keys(errors).length === 0 ||
-                       Object.values(errors).every(error => !error);
-
-    return hasRequiredFields && hasNoErrors && !isSubmitting;
-  }, [formData, errors, isSubmitting]);
+  const canSubmit = formData.title.trim() &&
+                   formData.description.trim() &&
+                   formData.image &&
+                   Object.keys(errors).length === 0 &&
+                   !isSubmitting;
 
   const submitForm = async (boardId) => {
     if (!validateForm()) {
@@ -60,19 +57,14 @@ export const useCreateKudos = () => {
 
     try {
       const cardData = {
-        id: Date.now(),
-        boardId: parseInt(boardId),
         title: formData.title.trim(),
         description: formData.description.trim(),
         author: formData.author.trim() || '',
-        image: formData.image,
-        upvotes: 0,
-        createdAt: new Date().toISOString()
+        image: formData.image
       };
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      return cardData;
+      const createdCard = await api.createKudosCard(boardId, cardData);
+      return createdCard;
     } catch (error) {
       setErrors({ general: CARD_ERROR_MESSAGES.general.createFailed });
       return false;

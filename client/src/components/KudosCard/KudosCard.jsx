@@ -23,6 +23,7 @@ const KudosCard = ({ card, onUpvote, onDelete }) => {
           src={image}
           alt={title}
           className="kudos-image"
+          loading="lazy"
         />
       </div>
 

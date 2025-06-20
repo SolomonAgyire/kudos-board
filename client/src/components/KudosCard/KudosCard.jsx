@@ -25,8 +25,7 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
   const handleUpvote = async () => {
     setIsUpvoting(true);
     try {
-      const updatedCard = await api.upvoteKudosCard(card.id);
-      onUpvote(card.id, updatedCard.upvotes);
+      await onUpvote(card.id);
     } catch (error) {
       console.error('Failed to upvote card:', error);
       alert('Failed to upvote card');

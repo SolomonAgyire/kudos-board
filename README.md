@@ -133,7 +133,9 @@ Deployed Application (**required**): [Kudos Board Deployed Site](https://kudos-b
 
 ### Walkthrough Video
 
-<div style="position: relative; padding-bottom: 56.287425149700596%; height: 0;"><iframe src="https://www.loom.com/embed/928ef9be89af4384a6bcb3cdd72c8252?sid=b25feecd-12bf-4f4a-8692-60fdbdf175d6" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+Kudus Board Project Update: Features and Functionality 🚀 - Watch Video
+
+
 
 ### Reflection
 

@@ -55,7 +55,6 @@ export const useBoards = () => {
     }
   };
 
-  // Simple filtering - no complex logic
   let filteredBoards = boards;
 
   if (selectedCategory === 'recent') {

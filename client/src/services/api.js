@@ -1,18 +1,20 @@
-
 import { API_CONFIG } from '../config/api';
 
 export const api = {
-  // Board endpoints
   getBoards: async () => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards`);
-    if (!response.ok) throw new Error('Failed to fetch boards');
+    if (!response.ok) {
+      throw new Error('Failed to fetch boards');
+    }
     return response.json();
   },
 
   getBoard: async (boardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`);
     if (!response.ok) {
-      if (response.status === 404) throw new Error('Board not found');
+      if (response.status === 404) {
+        throw new Error('Board not found');
+      }
       throw new Error('Failed to fetch board');
     }
     return response.json();
@@ -26,7 +28,9 @@ export const api = {
       },
       body: JSON.stringify(boardData),
     });
-    if (!response.ok) throw new Error('Failed to create board');
+    if (!response.ok) {
+      throw new Error('Failed to create board');
+    }
     return response.json();
   },
 
@@ -34,14 +38,17 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`, {
       method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete board');
+    if (!response.ok) {
+      throw new Error('Failed to delete board');
+    }
     return response.json();
   },
 
-  // Kudos card endpoints
   getKudosCards: async (boardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/board/${boardId}`);
-    if (!response.ok) throw new Error('Failed to fetch kudos cards');
+    if (!response.ok) {
+      throw new Error('Failed to fetch kudos cards');
+    }
     return response.json();
   },
 
@@ -53,7 +60,9 @@ export const api = {
       },
       body: JSON.stringify({ ...cardData, boardId }),
     });
-    if (!response.ok) throw new Error('Failed to create kudos card');
+    if (!response.ok) {
+      throw new Error('Failed to create kudos card');
+    }
     return response.json();
   },
 
@@ -61,9 +70,21 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
       method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete kudos card');
-    if (response.status === 204) return null;
-    return response.json();
+    
+    if (response.status === 204) {
+      return null;
+    }
+    
+    if (response.status === 404) {
+      console.warn(`Card ${cardId} was already deleted`);
+      return null;
+    }
+    
+    if (!response.ok) {
+      throw new Error(`Failed to delete kudos card (${response.status})`);
+    }
+    
+    return null;
   },
 
   upvoteKudosCard: async (cardId) => {
@@ -73,13 +94,17 @@ export const api = {
         'Content-Type': 'application/json',
       },
     });
-    if (!response.ok) throw new Error('Failed to upvote kudos card');
+    if (!response.ok) {
+      throw new Error('Failed to upvote kudos card');
+    }
     return response.json();
   },
 
   getComments: async (cardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments/card/${cardId}`);
-    if (!response.ok) throw new Error('Failed to fetch comments');
+    if (!response.ok) {
+      throw new Error('Failed to fetch comments');
+    }
     return response.json();
   },
 
@@ -91,7 +116,9 @@ export const api = {
       },
       body: JSON.stringify(commentData),
     });
-    if (!response.ok) throw new Error('Failed to create comment');
+    if (!response.ok) {
+      throw new Error('Failed to create comment');
+    }
     return response.json();
   },
 
@@ -103,7 +130,9 @@ export const api = {
       },
       body: JSON.stringify(commentData),
     });
-    if (!response.ok) throw new Error('Failed to update comment');
+    if (!response.ok) {
+      throw new Error('Failed to update comment');
+    }
     return response.json();
   },
 
@@ -111,8 +140,12 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
       method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete comment');
-    if (response.status === 204) return null;
+    if (!response.ok) {
+      throw new Error('Failed to delete comment');
+    }
+    if (response.status === 204) {
+      return null;
+    }
     return response.json();
   }
 };

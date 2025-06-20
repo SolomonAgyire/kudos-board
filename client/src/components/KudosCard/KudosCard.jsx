@@ -12,11 +12,10 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
     if (window.confirm('Are you sure you want to delete this card?')) {
       setIsDeleting(true);
       try {
-        await api.deleteKudosCard(card.boardId, card.id);
-        onDelete(card.id);
+        await onDelete(card.id);
       } catch (error) {
         console.error('Failed to delete card:', error);
-        alert('Failed to delete card');
+        alert('Failed to delete card: ' + error.message);
       } finally {
         setIsDeleting(false);
       }

@@ -21,11 +21,9 @@ const BoardDetails = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch board details
         const board = await api.getBoard(boardId);
         setBoard(board);
 
-        // Fetch cards for board
         const cardsData = await api.getKudosCards(boardId);
         setCards(cardsData);
       } catch (err) {
@@ -74,7 +72,6 @@ const BoardDetails = () => {
       setIsAddCardModalOpen(false);
     } catch (err) {
       console.error('Error creating card:', err);
-
     }
   };
 

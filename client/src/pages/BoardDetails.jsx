@@ -78,14 +78,9 @@ const BoardDetails = () => {
   const categoryData = BOARD_CATEGORIES.find(cat => cat.value === board.category);
   const categoryColor = categoryData ? categoryData.color : '#667eea';
 
-  const handleAddCard = async (newCard) => {
-    try {
-      const createdCard = await api.createKudosCard(boardId, newCard);
-      setCards(prevCards => sortCards([...prevCards, createdCard]));
-      setIsAddCardModalOpen(false);
-    } catch (err) {
-      console.error('Error creating card:', err);
-    }
+  const handleAddCard = (createdCard) => {
+    setCards(prevCards => sortCards([...prevCards, createdCard]));
+    setIsAddCardModalOpen(false);
   };
 
   const handleDeleteCard = async (cardId) => {

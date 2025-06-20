@@ -43,16 +43,8 @@ export const useBoards = () => {
     }
   };
 
-  const addBoard = async (newBoard) => {
-    try {
-      const createdBoard = await api.createBoard(newBoard);
-      setBoards(prevBoards => [createdBoard, ...prevBoards]);
-      return createdBoard;
-    } catch (err) {
-      console.error('Error creating board:', err);
-      setError('Failed to create board');
-      throw err;
-    }
+  const addBoard = (createdBoard) => {
+    setBoards(prevBoards => [createdBoard, ...prevBoards]);
   };
 
   let filteredBoards = boards;

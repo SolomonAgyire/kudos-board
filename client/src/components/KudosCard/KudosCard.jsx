@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { api } from '../../services/api';
-import CommentModal from '../CommentModal/CommentModal';
 import './KudosCard.css';
 
-const KudosCard = ({ card, onDelete, onUpvote, onPin }) => {
-  const [showCommentModal, setShowCommentModal] = useState(false);
+const KudosCard = ({ card, onDelete, onUpvote, onPin, onOpenComments }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpvoting, setIsUpvoting] = useState(false);
   const [isPinning, setIsPinning] = useState(false);
@@ -51,20 +48,18 @@ const KudosCard = ({ card, onDelete, onUpvote, onPin }) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
+
+  // We now use onOpenComments prop instead of local state
 
   return (
     <div className={`kudos-card ${card.isPinned ? 'pinned' : ''}`}>
       {card.isPinned && <div className="pin-indicator">📌</div>}
-      
+
       <div className="kudos-image-container">
-        <img
-          src={card.image}
-          alt={card.title}
-          className="kudos-image"
-        />
+        <img src={card.image} alt={card.title} className="kudos-image" />
       </div>
 
       <div className="kudos-content">
@@ -77,48 +72,26 @@ const KudosCard = ({ card, onDelete, onUpvote, onPin }) => {
         </div>
 
         <div className="kudos-actions">
-          <button
-            className="upvote-btn"
-            onClick={handleUpvote}
-            disabled={isUpvoting}
-          >
+          <button className="upvote-btn" onClick={handleUpvote} disabled={isUpvoting}>
             <span className="upvote-icon">👍</span>
             <span className="upvote-count">{card.upvotes}</span>
           </button>
 
-          <button
-            className="pin-btn"
-            onClick={handlePin}
-            disabled={isPinning}
-          >
+          <button className="pin-btn" onClick={handlePin} disabled={isPinning}>
             <span className="pin-icon">{card.isPinned ? '📌' : '📍'}</span>
             <span>{card.isPinned ? 'Unpin' : 'Pin'}</span>
           </button>
 
-          <button
-            className="comments-btn"
-            onClick={() => setShowCommentModal(true)}
-          >
+          <button className="comments-btn" onClick={() => onOpenComments(card)}>
             <span className="comments-icon">💬</span>
             <span>Comments</span>
           </button>
 
-          <button
-            className="delete-btn"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <button className="delete-btn" onClick={handleDelete} disabled={isDeleting}>
             🗑️
           </button>
         </div>
       </div>
-
-      <CommentModal
-        isOpen={showCommentModal}
-        onClose={() => setShowCommentModal(false)}
-        cardId={card.id}
-        cardTitle={card.title}
-      />
     </div>
   );
 };

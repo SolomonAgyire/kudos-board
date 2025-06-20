@@ -1,20 +1,17 @@
+
 import { API_CONFIG } from '../config/api';
 
 export const api = {
   getBoards: async () => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch boards');
-    }
+    if (!response.ok) throw new Error('Failed to fetch boards');
     return response.json();
   },
 
   getBoard: async (boardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`);
     if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Board not found');
-      }
+      if (response.status === 404) throw new Error('Board not found');
       throw new Error('Failed to fetch board');
     }
     return response.json();
@@ -28,11 +25,7 @@ export const api = {
       },
       body: JSON.stringify(boardData),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to create board (${response.status})`);
-    }
+    if (!response.ok) throw new Error('Failed to create board');
     return response.json();
   },
 
@@ -40,27 +33,14 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`, {
       method: 'DELETE',
     });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.warn(`Board ${boardId} was already deleted or doesn't exist`);
-        return null;
-      }
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to delete board (${response.status})`);
-    }
-
-    if (response.status === 204) {
-      return null;
-    }
+    if (!response.ok) throw new Error('Failed to delete board');
+    if (response.status === 204) return null;
     return response.json();
   },
 
   getKudosCards: async (boardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/board/${boardId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch kudos cards');
-    }
+    if (!response.ok) throw new Error('Failed to fetch kudos cards');
     return response.json();
   },
 
@@ -70,16 +50,18 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...cardData,
-        boardId: parseInt(boardId),
-      }),
+      body: JSON.stringify({ ...cardData, boardId }),
     });
+    if (!response.ok) throw new Error('Failed to create kudos card');
+    return response.json();
+  },
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to create kudos card (${response.status})`);
-    }
+  deleteKudosCard: async (boardId, cardId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete kudos card');
+    if (response.status === 204) return null;
     return response.json();
   },
 
@@ -90,73 +72,64 @@ export const api = {
         'Content-Type': 'application/json',
       },
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to upvote kudos card (${response.status})`);
-    }
+    if (!response.ok) throw new Error('Failed to upvote kudos card');
     return response.json();
   },
 
-  pinKudosCard: async (cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}/pin`, {
-      method: 'PUT',
+  togglePinKudosCard: async (cardId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}/toggle-pin`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to pin kudos card (${response.status})`);
-    }
-    return response.json();
-  },
-
-  deleteKudosCard: async (boardId, cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.warn(`Card ${cardId} was already deleted or doesn't exist`);
-        return null;
-      }
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to delete kudos card (${response.status})`);
-    }
-
-    if (response.status === 204) {
-      return null;
-    }
+    if (!response.ok) throw new Error('Failed to toggle pin status');
     return response.json();
   },
 
   getComments: async (cardId) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments/card/${cardId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments');
-    }
+    if (!response.ok) throw new Error('Failed to fetch comments');
     return response.json();
   },
 
-  createComment: async (cardId, commentData) => {
+  createComment: async (commentData) => {
+    console.log('API service - creating comment with data:', commentData);
+
+    // Ensure cardId is a number
+    const processedData = {
+      ...commentData,
+      cardId: parseInt(commentData.cardId)
+    };
+
+    console.log('API service - processed data to send:', processedData);
+
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...commentData,
-        cardId: parseInt(cardId),
-      }),
+      body: JSON.stringify(processedData),
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to create comment (${response.status})`);
+      const errorData = await response.json();
+      console.error('API error response:', errorData);
+      throw new Error(errorData.error || 'Failed to create comment');
     }
+
+    return response.json();
+  },
+
+  updateComment: async (commentId, commentData) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(commentData),
+    });
+    if (!response.ok) throw new Error('Failed to update comment');
     return response.json();
   },
 
@@ -164,15 +137,8 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
       method: 'DELETE',
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Failed to delete comment (${response.status})`);
-    }
-
-    if (response.status === 204) {
-      return null;
-    }
+    if (!response.ok) throw new Error('Failed to delete comment');
+    if (response.status === 204) return null;
     return response.json();
-  },
+  }
 };

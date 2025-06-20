@@ -4,13 +4,11 @@ import { BOARD_CATEGORIES } from '../constants/boardConstants';
 import AddKudosModal from '../components/AddKudosModal/AddKudosModal';
 import KudosGrid from '../components/KudosGrid/KudosGrid';
 import { api } from '../services/api';
-import { useTheme } from '../contexts/ThemeContext';
 import './BoardDetails.css';
 
 const BoardDetails = () => {
   const { boardId } = useParams();
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
   const [cards, setCards] = useState([]);
   const [board, setBoard] = useState(null);
@@ -23,11 +21,13 @@ const BoardDetails = () => {
         setLoading(true);
         setError(null);
 
+        // Fetch board details
         const board = await api.getBoard(boardId);
         setBoard(board);
 
+        // Fetch cards for board
         const cardsData = await api.getKudosCards(boardId);
-        setCards(sortCards(cardsData));
+        setCards(cardsData);
       } catch (err) {
         console.error('Error fetching board details:', err);
         setError(err.message || 'Failed to load board details');
@@ -38,17 +38,6 @@ const BoardDetails = () => {
 
     fetchBoardAndCards();
   }, [boardId]);
-
-  const sortCards = (cardsArray) => {
-    return [...cardsArray].sort((a, b) => {
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      if (a.isPinned && b.isPinned) {
-        return new Date(b.pinnedAt) - new Date(a.pinnedAt);
-      }
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-  };
 
   if (loading) {
     return (
@@ -78,9 +67,15 @@ const BoardDetails = () => {
   const categoryData = BOARD_CATEGORIES.find(cat => cat.value === board.category);
   const categoryColor = categoryData ? categoryData.color : '#667eea';
 
-  const handleAddCard = (createdCard) => {
-    setCards(prevCards => sortCards([...prevCards, createdCard]));
-    setIsAddCardModalOpen(false);
+  const handleAddCard = async (newCard) => {
+    try {
+      const createdCard = await api.createKudosCard(boardId, newCard);
+      setCards(prevCards => [...prevCards, createdCard]);
+      setIsAddCardModalOpen(false);
+    } catch (err) {
+      console.error('Error creating card:', err);
+
+    }
   };
 
   const handleDeleteCard = async (cardId) => {
@@ -96,9 +91,9 @@ const BoardDetails = () => {
     try {
       const updatedCard = await api.upvoteKudosCard(cardId);
       setCards(prevCards =>
-        sortCards(prevCards.map(card =>
+        prevCards.map(card =>
           card.id === cardId ? { ...card, upvotes: updatedCard.upvotes } : card
-        ))
+        )
       );
     } catch (err) {
       console.error('Error upvoting card:', err);
@@ -107,18 +102,14 @@ const BoardDetails = () => {
 
   const handlePinCard = async (cardId) => {
     try {
-      const updatedCard = await api.pinKudosCard(cardId);
+      const updatedCard = await api.togglePinKudosCard(cardId);
       setCards(prevCards =>
-        sortCards(prevCards.map(card =>
-          card.id === cardId ? { 
-            ...card, 
-            isPinned: updatedCard.isPinned,
-            pinnedAt: updatedCard.pinnedAt
-          } : card
-        ))
+        prevCards.map(card =>
+          card.id === cardId ? { ...card, isPinned: updatedCard.isPinned, pinnedAt: updatedCard.pinnedAt } : card
+        )
       );
     } catch (err) {
-      console.error('Error pinning card:', err);
+      console.error('Error pinning/unpinning card:', err);
     }
   };
 
@@ -154,10 +145,6 @@ const BoardDetails = () => {
             {board.author && <span className="board-author">by {board.author}</span>}
           </div>
         </div>
-
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {theme === 'light' ? '🌙' : '☀️'}
-        </button>
       </div>
 
       <div className="board-actions">

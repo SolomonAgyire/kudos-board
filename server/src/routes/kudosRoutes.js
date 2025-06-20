@@ -111,25 +111,27 @@ router.post('/:id/upvote', async (req, res) => {
   }
 });
 
-// Pin a kudos card
-router.put('/:id/pin', async (req, res) => {
+// Toggle pin status of a kudos card
+router.post('/:id/toggle-pin', async (req, res) => {
   try {
     const { id } = req.params;
-    
+
+    // First, get the current card to check its pin status
     const currentCard = await prisma.kudosCard.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id) }
     });
 
     if (!currentCard) {
       return res.status(404).json({ error: 'Kudos card not found' });
     }
 
+    // Toggle the isPinned status and update pinnedAt
     const updatedKudosCard = await prisma.kudosCard.update({
       where: { id: parseInt(id) },
       data: {
         isPinned: !currentCard.isPinned,
-        pinnedAt: !currentCard.isPinned ? new Date() : null,
-      },
+        pinnedAt: !currentCard.isPinned ? new Date() : null
+      }
     });
 
     res.json(updatedKudosCard);
@@ -143,18 +145,24 @@ router.put('/:id/pin', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    const cardId = parseInt(id);
+
+    console.log(`Attempting to delete card with ID: ${cardId}`);
 
     const kudosCard = await prisma.kudosCard.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: cardId },
     });
 
     if (!kudosCard) {
+      console.log(`Card with ID ${cardId} not found`);
       return res.status(404).json({ error: 'Kudos card not found' });
     }
 
+    console.log(`Found card: ${JSON.stringify(kudosCard)}`);
+
     // Delete the kudos card
     await prisma.kudosCard.delete({
-      where: { id: parseInt(id) },
+      where: { id: cardId },
     });
 
     await prisma.board.update({
@@ -166,6 +174,7 @@ router.delete('/:id', async (req, res) => {
       },
     });
 
+    console.log(`Successfully deleted card with ID: ${cardId}`);
     res.status(204).send();
   } catch (error) {
     console.error('Error deleting kudos card:', error);

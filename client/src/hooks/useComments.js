@@ -27,8 +27,24 @@ export const useComments = (cardId) => {
 
   const addComment = async (commentData) => {
     try {
-      const newComment = await api.createComment({ ...commentData, cardId });
-      setComments(prev => [newComment, ...prev]);
+      // Check if cardId is defined before creating a comment
+      if (!cardId) {
+        throw new Error('Card ID is required to add a comment');
+      }
+
+      // Log the comment data and cardId
+      console.log('useComments - cardId from hook:', cardId);
+      console.log('useComments - commentData received:', commentData);
+
+      // Don't add cardId again if it's already in commentData
+      const finalCommentData = commentData.cardId ?
+        commentData :
+        { ...commentData, cardId };
+
+      console.log('useComments - finalCommentData to be sent:', finalCommentData);
+
+      const newComment = await api.createComment(finalCommentData);
+      setComments((prev) => [newComment, ...prev]);
       return newComment;
     } catch (err) {
       console.error('Error creating comment:', err);
@@ -40,9 +56,9 @@ export const useComments = (cardId) => {
   const updateComment = async (commentId, commentData) => {
     try {
       const updatedComment = await api.updateComment(commentId, commentData);
-      setComments(prev => prev.map(comment =>
-        comment.id === commentId ? updatedComment : comment
-      ));
+      setComments((prev) =>
+        prev.map((comment) => (comment.id === commentId ? updatedComment : comment))
+      );
       return updatedComment;
     } catch (err) {
       console.error('Error updating comment:', err);
@@ -54,7 +70,7 @@ export const useComments = (cardId) => {
   const deleteComment = async (commentId) => {
     try {
       await api.deleteComment(commentId);
-      setComments(prev => prev.filter(comment => comment.id !== commentId));
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
     } catch (err) {
       console.error('Error deleting comment:', err);
       setError('Failed to delete comment');
@@ -69,6 +85,6 @@ export const useComments = (cardId) => {
     addComment,
     updateComment,
     deleteComment,
-    refetch: fetchComments
+    refetch: fetchComments,
   };
 };

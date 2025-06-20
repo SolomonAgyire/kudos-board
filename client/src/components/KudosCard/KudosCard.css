@@ -87,6 +87,16 @@
   color: var(--text-secondary);
 }
 
+.comments-btn {
+  background: #667eea;
+  color: white;
+  flex: 1;
+}
+
+.comments-btn:hover {
+  background: #5a6fd8;
+}
+
 .kudos-author {
   font-style: italic;
 }

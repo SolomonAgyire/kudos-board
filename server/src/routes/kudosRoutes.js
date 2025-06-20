@@ -42,6 +42,27 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { title, description, author, image, boardId } = req.body;
+
+    // Check if a similar card already exists to prevent duplicates
+    const existingCard = await prisma.kudosCard.findFirst({
+      where: {
+        title: title,
+        description: description,
+        boardId: parseInt(boardId),
+        createdAt: {
+          // Check if a similar card was created in the last 10 seconds
+          gte: new Date(Date.now() - 10000)
+        }
+      }
+    });
+
+    // If a similar card was recently created, return that instead of creating a new one
+    if (existingCard) {
+      console.log('Duplicate card detected, returning existing card:', existingCard.id);
+      return res.status(200).json(existingCard);
+    }
+
+    // Create new card if no duplicate was found
     const newKudosCard = await prisma.kudosCard.create({
       data: {
         title,
@@ -115,7 +136,6 @@ router.post('/:id/toggle-pin', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // First, get the current card to check its pin status
     const currentCard = await prisma.kudosCard.findUnique({
       where: { id: parseInt(id) }
     });

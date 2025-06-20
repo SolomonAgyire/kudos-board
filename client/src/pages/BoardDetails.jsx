@@ -70,11 +70,19 @@ const BoardDetails = () => {
   const handleAddCard = async (newCard) => {
     try {
       const createdCard = await api.createKudosCard(boardId, newCard);
-      setCards(prevCards => [...prevCards, createdCard]);
+
+      // Check if the card already exists in the state to prevent duplicates
+      setCards(prevCards => {
+        // Check if a card with this ID already exists
+        const cardExists = prevCards.some(card => card.id === createdCard.id);
+
+        // Only add the card if it doesn't already exist
+        return cardExists ? prevCards : [...prevCards, createdCard];
+      });
+
       setIsAddCardModalOpen(false);
     } catch (err) {
       console.error('Error creating card:', err);
-
     }
   };
 

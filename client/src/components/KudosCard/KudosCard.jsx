@@ -3,10 +3,11 @@ import { api } from '../../services/api';
 import CommentModal from '../CommentModal/CommentModal';
 import './KudosCard.css';
 
-const KudosCard = ({ card, onDelete, onUpvote }) => {
+const KudosCard = ({ card, onDelete, onUpvote, onPin }) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpvoting, setIsUpvoting] = useState(false);
+  const [isPinning, setIsPinning] = useState(false);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this card?')) {
@@ -28,40 +29,51 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
       await onUpvote(card.id);
     } catch (error) {
       console.error('Failed to upvote card:', error);
-      alert('Failed to upvote card');
+      alert('Failed to upvote card: ' + error.message);
     } finally {
       setIsUpvoting(false);
     }
   };
 
-  const handleViewComments = () => {
-    setShowCommentModal(true);
+  const handlePin = async () => {
+    setIsPinning(true);
+    try {
+      await onPin(card.id);
+    } catch (error) {
+      console.error('Failed to pin card:', error);
+      alert('Failed to pin card: ' + error.message);
+    } finally {
+      setIsPinning(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   return (
-    <>
-      <div className="kudos-card">
-        <div className="kudos-image-container">
-          <img
-            src={card.image}
-            alt={card.title}
-            className="kudos-image"
-            loading="lazy"
-          />
-        </div>
+    <div className={`kudos-card ${card.isPinned ? 'pinned' : ''}`}>
+      {card.isPinned && <div className="pin-indicator">📌</div>}
+      
+      <div className="kudos-image-container">
+        <img
+          src={card.image}
+          alt={card.title}
+          className="kudos-image"
+        />
+      </div>
 
-        <div className="kudos-content">
-          <h3 className="kudos-title">{card.title}</h3>
-          <p className="kudos-description">{card.description}</p>
+      <div className="kudos-content">
+        <h3 className="kudos-title">{card.title}</h3>
+        <p className="kudos-description">{card.description}</p>
 
-          <div className="kudos-meta">
-            {card.author && (
-              <span className="kudos-author">by {card.author}</span>
-            )}
-            <span className="kudos-date">
-              {new Date(card.createdAt).toLocaleDateString()}
-            </span>
-          </div>
+        <div className="kudos-meta">
+          {card.author && <span className="kudos-author">by {card.author}</span>}
+          <span className="kudos-date">{formatDate(card.createdAt)}</span>
         </div>
 
         <div className="kudos-actions">
@@ -75,10 +87,20 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
           </button>
 
           <button
+            className="pin-btn"
+            onClick={handlePin}
+            disabled={isPinning}
+          >
+            <span className="pin-icon">{card.isPinned ? '📌' : '📍'}</span>
+            <span>{card.isPinned ? 'Unpin' : 'Pin'}</span>
+          </button>
+
+          <button
             className="comments-btn"
-            onClick={handleViewComments}
+            onClick={() => setShowCommentModal(true)}
           >
             <span className="comments-icon">💬</span>
+            <span>Comments</span>
           </button>
 
           <button
@@ -86,7 +108,7 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
             onClick={handleDelete}
             disabled={isDeleting}
           >
-            {isDeleting ? 'Deleting...' : '🗑️'}
+            🗑️
           </button>
         </div>
       </div>
@@ -94,9 +116,10 @@ const KudosCard = ({ card, onDelete, onUpvote }) => {
       <CommentModal
         isOpen={showCommentModal}
         onClose={() => setShowCommentModal(false)}
-        card={card}
+        cardId={card.id}
+        cardTitle={card.title}
       />
-    </>
+    </div>
   );
 };
 

@@ -111,6 +111,34 @@ router.post('/:id/upvote', async (req, res) => {
   }
 });
 
+// Pin a kudos card
+router.put('/:id/pin', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const currentCard = await prisma.kudosCard.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!currentCard) {
+      return res.status(404).json({ error: 'Kudos card not found' });
+    }
+
+    const updatedKudosCard = await prisma.kudosCard.update({
+      where: { id: parseInt(id) },
+      data: {
+        isPinned: !currentCard.isPinned,
+        pinnedAt: !currentCard.isPinned ? new Date() : null,
+      },
+    });
+
+    res.json(updatedKudosCard);
+  } catch (error) {
+    console.error('Error toggling pin status:', error);
+    res.status(500).json({ error: 'Failed to toggle pin status' });
+  }
+});
+
 // Delete a kudos card
 router.delete('/:id', async (req, res) => {
   try {

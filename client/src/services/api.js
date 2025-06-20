@@ -28,8 +28,10 @@ export const api = {
       },
       body: JSON.stringify(boardData),
     });
+
     if (!response.ok) {
-      throw new Error('Failed to create board');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to create board (${response.status})`);
     }
     return response.json();
   },
@@ -38,8 +40,18 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`, {
       method: 'DELETE',
     });
+
     if (!response.ok) {
-      throw new Error('Failed to delete board');
+      if (response.status === 404) {
+        console.warn(`Board ${boardId} was already deleted or doesn't exist`);
+        return null;
+      }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to delete board (${response.status})`);
+    }
+
+    if (response.status === 204) {
+      return null;
     }
     return response.json();
   },
@@ -58,33 +70,17 @@ export const api = {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...cardData, boardId }),
+      body: JSON.stringify({
+        ...cardData,
+        boardId: parseInt(boardId),
+      }),
     });
+
     if (!response.ok) {
-      throw new Error('Failed to create kudos card');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to create kudos card (${response.status})`);
     }
     return response.json();
-  },
-
-  deleteKudosCard: async (boardId, cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
-      method: 'DELETE',
-    });
-    
-    if (response.status === 204) {
-      return null;
-    }
-    
-    if (response.status === 404) {
-      console.warn(`Card ${cardId} was already deleted`);
-      return null;
-    }
-    
-    if (!response.ok) {
-      throw new Error(`Failed to delete kudos card (${response.status})`);
-    }
-    
-    return null;
   },
 
   upvoteKudosCard: async (cardId) => {
@@ -94,8 +90,45 @@ export const api = {
         'Content-Type': 'application/json',
       },
     });
+
     if (!response.ok) {
-      throw new Error('Failed to upvote kudos card');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to upvote kudos card (${response.status})`);
+    }
+    return response.json();
+  },
+
+  pinKudosCard: async (cardId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}/pin`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to pin kudos card (${response.status})`);
+    }
+    return response.json();
+  },
+
+  deleteKudosCard: async (boardId, cardId) => {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`Card ${cardId} was already deleted or doesn't exist`);
+        return null;
+      }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to delete kudos card (${response.status})`);
+    }
+
+    if (response.status === 204) {
+      return null;
     }
     return response.json();
   },
@@ -108,30 +141,21 @@ export const api = {
     return response.json();
   },
 
-  createComment: async (commentData) => {
+  createComment: async (cardId, commentData) => {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(commentData),
+      body: JSON.stringify({
+        ...commentData,
+        cardId: parseInt(cardId),
+      }),
     });
-    if (!response.ok) {
-      throw new Error('Failed to create comment');
-    }
-    return response.json();
-  },
 
-  updateComment: async (commentId, commentData) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(commentData),
-    });
     if (!response.ok) {
-      throw new Error('Failed to update comment');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to create comment (${response.status})`);
     }
     return response.json();
   },
@@ -140,12 +164,15 @@ export const api = {
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
       method: 'DELETE',
     });
+
     if (!response.ok) {
-      throw new Error('Failed to delete comment');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Failed to delete comment (${response.status})`);
     }
+
     if (response.status === 204) {
       return null;
     }
     return response.json();
-  }
+  },
 };

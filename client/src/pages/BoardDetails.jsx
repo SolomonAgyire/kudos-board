@@ -27,7 +27,7 @@ const BoardDetails = () => {
         setBoard(board);
 
         const cardsData = await api.getKudosCards(boardId);
-        setCards(cardsData);
+        setCards(sortCards(cardsData));
       } catch (err) {
         console.error('Error fetching board details:', err);
         setError(err.message || 'Failed to load board details');
@@ -38,6 +38,17 @@ const BoardDetails = () => {
 
     fetchBoardAndCards();
   }, [boardId]);
+
+  const sortCards = (cardsArray) => {
+    return [...cardsArray].sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      if (a.isPinned && b.isPinned) {
+        return new Date(b.pinnedAt) - new Date(a.pinnedAt);
+      }
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  };
 
   if (loading) {
     return (
@@ -70,7 +81,7 @@ const BoardDetails = () => {
   const handleAddCard = async (newCard) => {
     try {
       const createdCard = await api.createKudosCard(boardId, newCard);
-      setCards(prevCards => [...prevCards, createdCard]);
+      setCards(prevCards => sortCards([...prevCards, createdCard]));
       setIsAddCardModalOpen(false);
     } catch (err) {
       console.error('Error creating card:', err);
@@ -90,12 +101,29 @@ const BoardDetails = () => {
     try {
       const updatedCard = await api.upvoteKudosCard(cardId);
       setCards(prevCards =>
-        prevCards.map(card =>
+        sortCards(prevCards.map(card =>
           card.id === cardId ? { ...card, upvotes: updatedCard.upvotes } : card
-        )
+        ))
       );
     } catch (err) {
       console.error('Error upvoting card:', err);
+    }
+  };
+
+  const handlePinCard = async (cardId) => {
+    try {
+      const updatedCard = await api.pinKudosCard(cardId);
+      setCards(prevCards =>
+        sortCards(prevCards.map(card =>
+          card.id === cardId ? { 
+            ...card, 
+            isPinned: updatedCard.isPinned,
+            pinnedAt: updatedCard.pinnedAt
+          } : card
+        ))
+      );
+    } catch (err) {
+      console.error('Error pinning card:', err);
     }
   };
 
@@ -152,6 +180,7 @@ const BoardDetails = () => {
           cards={cards}
           onDeleteCard={handleDeleteCard}
           onUpvoteCard={handleUpvoteCard}
+          onPinCard={handlePinCard}
           emptyMessage="No cards yet. Be the first to add a kudos card!"
         />
       </main>

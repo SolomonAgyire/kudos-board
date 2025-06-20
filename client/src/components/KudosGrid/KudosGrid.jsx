@@ -6,6 +6,7 @@ const KudosGrid = ({
   cards,
   onUpvoteCard,
   onDeleteCard,
+  onPinCard,
   emptyMessage = "No cards found. Add your first kudos card!"
 }) => {
   if (cards.length === 0) {
@@ -28,6 +29,7 @@ const KudosGrid = ({
           card={card}
           onUpvote={onUpvoteCard}
           onDelete={onDeleteCard}
+          onPin={onPinCard}
         />
       ))}
     </div>

@@ -52,7 +52,6 @@ const KudosCard = ({ card, onDelete, onUpvote, onPin, onOpenComments }) => {
     });
   };
 
-  // We now use onOpenComments prop instead of local state
 
   return (
     <div className={`kudos-card ${card.isPinned ? 'pinned' : ''}`}>

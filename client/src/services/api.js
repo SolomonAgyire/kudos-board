@@ -94,15 +94,12 @@ export const api = {
   },
 
   createComment: async (commentData) => {
-    console.log('API service - creating comment with data:', commentData);
 
-    // Ensure cardId is a number
+    // card: int
     const processedData = {
       ...commentData,
       cardId: parseInt(commentData.cardId)
     };
-
-    console.log('API service - processed data to send:', processedData);
 
     const response = await fetch(`${API_CONFIG.BASE_URL}/comments`, {
       method: 'POST',

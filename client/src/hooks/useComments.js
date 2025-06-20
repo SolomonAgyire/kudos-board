@@ -27,14 +27,11 @@ export const useComments = (cardId) => {
 
   const addComment = async (commentData) => {
     try {
-      // Check if cardId is defined before creating a comment
+      // Check if cardId is defined
       if (!cardId) {
         throw new Error('Card ID is required to add a comment');
       }
 
-      // Log the comment data and cardId
-      console.log('useComments - cardId from hook:', cardId);
-      console.log('useComments - commentData received:', commentData);
 
       // Don't add cardId again if it's already in commentData
       const finalCommentData = commentData.cardId ?

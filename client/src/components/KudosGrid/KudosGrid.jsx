@@ -20,7 +20,6 @@ const KudosGrid = ({
 
   const handleCloseComments = () => {
     setShowCommentModal(false);
-    // Don't clear selectedCard immediately to avoid unmounting issues
     setTimeout(() => setSelectedCard(null), 300);
   };
   if (cards.length === 0) {
@@ -35,19 +34,14 @@ const KudosGrid = ({
     );
   }
 
-  // Sort cards: pinned cards first (sorted by pinnedAt), then unpinned cards
   const sortedCards = [...cards].sort((a, b) => {
-    // If both cards are pinned or both are unpinned, sort by pinnedAt or createdAt
     if (a.isPinned === b.isPinned) {
       if (a.isPinned) {
-        // For pinned cards, sort by pinnedAt (most recent first)
         return new Date(b.pinnedAt) - new Date(a.pinnedAt);
       } else {
-        // For unpinned cards, sort by createdAt (most recent first)
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
     }
-    // If one is pinned and the other is not, pinned comes first
     return a.isPinned ? -1 : 1;
   });
 
@@ -64,7 +58,6 @@ const KudosGrid = ({
         />
       ))}
 
-      {/* Single CommentModal instance for the entire grid */}
       {selectedCard && (
         <CommentModal isOpen={showCommentModal} onClose={handleCloseComments} card={selectedCard} />
       )}

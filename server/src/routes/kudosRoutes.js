@@ -4,7 +4,6 @@ const { PrismaClient } = require('@prisma/client');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Get all kudos cards for a board
 router.get('/board/:boardId', async (req, res) => {
   try {
     const { boardId } = req.params;

@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import BoardGrid from '../components/BoardGrid/BoardGrid';
 import CreateBoardModal from '../components/CreateBoardModal/CreateBoardModal';
 import { useBoards } from '../hooks/useBoards';
+import { useTheme } from '../contexts/ThemeContext';
 
 const filterButtons = ['all', 'celebration', 'thank-you', 'inspiration', 'recent'];
 const filterLabels = {
@@ -17,6 +18,7 @@ const filterLabels = {
 
 const Dashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const {
     boards,
@@ -62,6 +64,9 @@ const Dashboard = () => {
           onClear={handleClearSearch}
           placeholder="Search boards..."
         />
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
       </header>
 
       <div className="filter-section">

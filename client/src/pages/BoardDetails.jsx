@@ -4,11 +4,13 @@ import { BOARD_CATEGORIES } from '../constants/boardConstants';
 import AddKudosModal from '../components/AddKudosModal/AddKudosModal';
 import KudosGrid from '../components/KudosGrid/KudosGrid';
 import { api } from '../services/api';
+import { useTheme } from '../contexts/ThemeContext';
 import './BoardDetails.css';
 
 const BoardDetails = () => {
   const { boardId } = useParams();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
   const [cards, setCards] = useState([]);
   const [board, setBoard] = useState(null);
@@ -129,6 +131,10 @@ const BoardDetails = () => {
             {board.author && <span className="board-author">by {board.author}</span>}
           </div>
         </div>
+
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
       </div>
 
       <div className="board-actions">

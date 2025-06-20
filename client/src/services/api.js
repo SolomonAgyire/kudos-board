@@ -1,15 +1,14 @@
-
 import { API_CONFIG } from '../config/api';
 
 export const api = {
   getBoards: async () => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/boards`);
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/boards`);
     if (!response.ok) throw new Error('Failed to fetch boards');
     return response.json();
   },
 
   getBoard: async (boardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`);
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/boards/${boardId}`);
     if (!response.ok) {
       if (response.status === 404) throw new Error('Board not found');
       throw new Error('Failed to fetch board');
@@ -18,7 +17,7 @@ export const api = {
   },
 
   createBoard: async (boardData) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/boards`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/boards`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +29,7 @@ export const api = {
   },
 
   deleteBoard: async (boardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/boards/${boardId}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/boards/${boardId}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete board');
@@ -39,13 +38,13 @@ export const api = {
   },
 
   getKudosCards: async (boardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/board/${boardId}`);
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/kudos/board/${boardId}`);
     if (!response.ok) throw new Error('Failed to fetch kudos cards');
     return response.json();
   },
 
   createKudosCard: async (boardId, cardData) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/kudos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +56,7 @@ export const api = {
   },
 
   deleteKudosCard: async (boardId, cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/kudos/${cardId}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete kudos card');
@@ -66,7 +65,7 @@ export const api = {
   },
 
   upvoteKudosCard: async (cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}/upvote`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/kudos/${cardId}/upvote`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +76,7 @@ export const api = {
   },
 
   togglePinKudosCard: async (cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/kudos/${cardId}/toggle-pin`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/kudos/${cardId}/toggle-pin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,20 +87,19 @@ export const api = {
   },
 
   getComments: async (cardId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/card/${cardId}`);
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/comments/card/${cardId}`);
     if (!response.ok) throw new Error('Failed to fetch comments');
     return response.json();
   },
 
   createComment: async (commentData) => {
-
     // card: int
     const processedData = {
       ...commentData,
-      cardId: parseInt(commentData.cardId)
+      cardId: parseInt(commentData.cardId),
     };
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/comments`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +117,7 @@ export const api = {
   },
 
   updateComment: async (commentId, commentData) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/comments/${commentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -131,11 +129,11 @@ export const api = {
   },
 
   deleteComment: async (commentId) => {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/comments/${commentId}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/comments/${commentId}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete comment');
     if (response.status === 204) return null;
     return response.json();
-  }
+  },
 };

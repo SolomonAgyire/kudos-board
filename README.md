@@ -133,8 +133,14 @@ Deployed Application (**required**): [Kudos Board Deployed Site](https://kudos-b
 
 ### Walkthrough Video
 
-Kudus Board Project Update: Features and Functionality 🚀 - Watch Video
-
+<div>
+    <a href="https://www.loom.com/share/b6629fba186d4d83bf4aaed4fe3e31cc">
+      <p>Week 3 Project Update: Kudu's Board Features and Functionality - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/b6629fba186d4d83bf4aaed4fe3e31cc">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/b6629fba186d4d83bf4aaed4fe3e31cc-3d7e6dac591e6871-full-play.gif">
+    </a>
+  </div>
 
 
 ### Reflection
